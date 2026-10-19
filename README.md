@@ -148,7 +148,7 @@ Prefer reversible archival under an agreed retention policy over irreversible bu
 - **TTL cleanup:** retained keys preserve replay identity; cleanup needs an agreed retention/retry window. Abandoned attempts consume storage. Unsent form data is lost after navigation/refresh, intentionally.
 - **Snapshot pagination and fully locked catalog prices:** offset pages can move while data changes; list/count are separate reads. Catalog prices are checked at read time; no product-update API is implemented.
 - **Full E2E automation, a mobile/accessibility audit, and full coverage:** focused tests target the required failure modes; browser review is documented. CSS supports small screens and native dialogs provide focus trapping, but this is not a claim of a comprehensive audit.
-- **Deployment/public repository/submission email:** local implementation only. The owner must review the code/decisions and choose repository visibility/access before publishing or submitting.
+- **Deployment/submission email:** the application runs locally; no hosted deployment or email submission has been performed.
 
 AI assistance and Omar's decision ownership are disclosed in [DECISIONS.md](DECISIONS.md). All secrets stay out of Git; the demo password is intentionally documented for local evaluation.
 

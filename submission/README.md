@@ -17,4 +17,4 @@ npm --prefix frontend test
 
 For the manual rapid-filter check, open Orders, optionally enable Slow 3G in browser Network tools, select three different status filters quickly, and wait. The selected final status and every displayed row must agree. For O1, refresh the statistics then navigate away before four seconds; its request is canceled.
 
-If recording instead, show the full count, change filters three times quickly, search/sort/page, then run the duplicate-proof command and show the one-record assertion. Keep the recording around two minutes. No recording, remote upload or email submission has been performed automatically.
+If recording instead, show the full count, change filters three times quickly, search/sort/page, then run the duplicate-proof command and show the one-record assertion. Keep the recording around two minutes. No recording or email submission has been performed automatically.
