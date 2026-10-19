@@ -35,4 +35,10 @@
 
 ## AI use and ownership
 
-OpenAI Codex assisted with brief analysis, design alternatives, scaffolding, code, documentation, test construction, and local browser verification. Omar selected the stack, scope, operational behavior, language support, prefix-search tradeoff, and other decisions through the recorded discussion. AI-generated output is not a substitute for Omar reviewing, understanding, defending, and modifying this code in the live interview. Specific decisions and limitations are recorded in `SYSTEM_DESIGN_NOTES.md`; implemented behavior and reproducible checks are in the source and README.
+I used AI tools in three roles:
+
+- **Gemina Argon:** analysis of the brief and explanations of requirements and technical concepts.
+- **Codex Astra:** reasoning through each problem, breaking it into smaller parts, and exploring alternative solutions so I could select an approach appropriate to the available time and effort.
+- **Codex Sol:** writing code, developing the architecture and file structure, and writing tests.
+
+I selected the stack, scope, operational behavior, language support, prefix-search tradeoff, and implementation choices through these discussions. AI assistance does not replace my responsibility to review, understand, defend, and modify the submitted code in the live interview. Detailed reasoning and limitations are recorded in `SYSTEM_DESIGN_NOTES.md`; implemented behavior and reproducible checks are in the source and README.
