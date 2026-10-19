@@ -63,6 +63,7 @@ export function ProductPicker({
               <input
                 autoFocus
                 aria-label={t('searchProducts')}
+                maxLength={254}
                 placeholder={t('searchProducts')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

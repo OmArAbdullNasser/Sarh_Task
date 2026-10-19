@@ -1,4 +1,5 @@
-import { ValidatedForm, FieldError, FormInput } from './ValidatedForm';
+import { IntegerInput } from './IntegerInput';
+import { ValidatedForm, FieldError } from './ValidatedForm';
 import { pageSchema } from '../lib/forms/schemas';
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -88,16 +89,15 @@ export function Pagination({
           }
         }}
       >
-        <FormInput
+        <IntegerInput
           name="page"
           aria-describedby="error-page"
           aria-label={t('goPage')}
           placeholder={t('goPage')}
-          type="number"
-          min="1"
+          min={1}
           max={Math.min(pages, 10000)}
-          value={jump}
-          onChange={(e) => setJump(e.target.value)}
+          value={jump === '' ? '' : Number(jump)}
+          onValueChange={(value) => setJump(String(value))}
         />
         <button className="text-button">{t('go')}</button>
         <FieldError name="page" />

@@ -1,3 +1,4 @@
+import { IntegerInput } from '../../components/IntegerInput';
 import { ValidatedForm, FieldError, FormInput } from '../../components/ValidatedForm';
 import { orderSchema } from '../../lib/forms/schemas';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -373,26 +374,24 @@ export function CreateOrderPage() {
                       </div>
                       <label className="line-quantity">
                         {t('quantity')}
-                        <FormInput
-                          type="number"
+                        <IntegerInput
                           required
                           min={1}
                           max={1000}
-                          step={1}
                           disabled={locked}
                           aria-label={t('quantity')}
                           name={`items.${index}.quantity`}
                           aria-describedby={`error-items.${index}.quantity`}
                           value={Number.isNaN(line.quantity) ? '' : line.quantity}
-                          onChange={(e) =>
+                          onValueChange={(value) =>
                             setLines((previous) =>
                               previous.map((l, i) =>
-                                i === index ? { ...l, quantity: e.target.valueAsNumber } : l,
+                                i === index ? { ...l, quantity: value === '' ? NaN : value } : l,
                               ),
                             )
                           }
                         />
-                        <FieldError aria-label={t('quantity')} name={`items.${index}.quantity`} />
+                        <FieldError name={`items.${index}.quantity`} />
                       </label>
                       <div className="line-price">
                         <span className="field-caption">{t('unitPrice')}</span>

@@ -88,7 +88,7 @@ it('shows translated field errors and never creates an invalid order', async () 
   await screen.findByRole('button', { name: 'Choose a product' });
   expect(container.querySelector('form')).toHaveAttribute('novalidate');
   fireEvent.change(screen.getByLabelText('Email address'), { target: { value: 'invalid' } });
-  fireEvent.change(screen.getByLabelText('Quantity'), { target: { value: '1.5' } });
+  fireEvent.change(screen.getByLabelText('Quantity'), { target: { value: '' } });
   fireEvent.click(screen.getByRole('button', { name: 'Create order' }));
   await screen.findByText('Enter a valid email address.');
   expect(screen.getByText('Enter a whole number from 1 to 1,000.')).toBeVisible();
