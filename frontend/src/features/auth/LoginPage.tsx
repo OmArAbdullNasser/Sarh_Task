@@ -1,3 +1,5 @@
+import { ValidatedForm, FieldError, FormInput } from '../../components/ValidatedForm';
+import { loginSchema } from '../../lib/forms/schemas';
 import { useRef, useState, type FormEvent } from 'react';
 import {
   Eye,
@@ -91,34 +93,46 @@ export function LoginPage() {
           <ThemeToggle />
           <LanguageToggle />
         </div>
-        <form className="login-form" onSubmit={submit}>
-          <span className="section-eyebrow">{t('workspace')}</span>
+        <ValidatedForm
+          className="login-form"
+          schema={loginSchema}
+          values={{ email, password }}
+          onSubmit={submit}
+        >
+          <span className="section-eyebrow">{t('operations')}</span>
           <h2>{t('loginTitle')}</h2>
           <p>{t('loginSubtitle')}</p>
           {!!error && <ErrorNotice error={error} />}
           <label>
             {t('email')}
-            <input
+            <FormInput
               type="email"
               dir="ltr"
               autoComplete="username"
               placeholder="you@company.com"
               required
               maxLength={254}
+              aria-label={t('email')}
+              name="email"
+              aria-describedby="error-email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            <FieldError name="email" />
           </label>
           <label>
             {t('password')}
             <span className="password-input">
-              <input
+              <FormInput
                 type={show ? 'text' : 'password'}
                 dir="ltr"
                 autoComplete="current-password"
                 placeholder="••••••••••••"
                 required
                 maxLength={128}
+                aria-label={t('password')}
+                name="password"
+                aria-describedby="error-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -131,6 +145,7 @@ export function LoginPage() {
                 {show ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </span>
+            <FieldError name="password" />
           </label>
           <button className="button button-primary login-submit" disabled={busy}>
             {busy ? t('signingIn') : t('signIn')}
@@ -155,7 +170,7 @@ export function LoginPage() {
               </button>
             ))}
           </div>
-        </form>
+        </ValidatedForm>
         <span className="login-bottom">{t('loginFooter')}</span>
       </section>
     </div>

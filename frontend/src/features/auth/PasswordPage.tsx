@@ -1,3 +1,5 @@
+import { ValidatedForm, FieldError, FormInput } from '../../components/ValidatedForm';
+import { passwordSchema } from '../../lib/forms/schemas';
 import { useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { KeyRound, ShieldCheck } from 'lucide-react';
@@ -15,22 +17,11 @@ export function PasswordPage() {
   const [confirm, setConfirm] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>();
-  const [invalid, setInvalid] = useState(false);
   const [saved, setSaved] = useState(false);
   const lock = useRef(false);
   async function submit(event: FormEvent) {
     event.preventDefault();
-    setInvalid(false);
     setSaved(false);
-    if (
-      newPassword !== confirm ||
-      newPassword === currentPassword ||
-      newPassword.length < 12 ||
-      newPassword.length > 128
-    ) {
-      setInvalid(true);
-      return;
-    }
     if (lock.current) return;
     lock.current = true;
     setBusy(true);
@@ -57,7 +48,7 @@ export function PasswordPage() {
     <div className="narrow-page">
       <div className="page-heading">
         <div>
-          <span className="section-eyebrow">{t('workspace')}</span>
+          <span className="section-eyebrow">{t('operations')}</span>
           <h1>{t('passwordTitle')}</h1>
           <p>{t(user?.mustChangePassword ? 'passwordSubtitle' : 'passwordOptionalSub')}</p>
         </div>
@@ -69,57 +60,68 @@ export function PasswordPage() {
           </span>
           <h2>{t('changePassword')}</h2>
         </div>
-        <form onSubmit={submit}>
+        <ValidatedForm
+          schema={passwordSchema}
+          values={{ currentPassword, newPassword, confirm }}
+          onSubmit={submit}
+        >
           {!!error && <ErrorNotice error={error} />}{' '}
-          {invalid && (
-            <div className="notice notice-error" role="alert">
-              {t('passwordMismatch')}
-            </div>
-          )}{' '}
           {saved && <SuccessNotice>{t('passwordSaved')}</SuccessNotice>}
           <label>
             {t('currentPassword')}
-            <input
+            <FormInput
               type="password"
               dir="ltr"
               required
               maxLength={128}
               autoComplete="current-password"
+              aria-label={t('currentPassword')}
+              name="currentPassword"
+              aria-describedby="error-currentPassword"
               value={currentPassword}
               onChange={(e) => setCurrent(e.target.value)}
             />
+            <FieldError name="currentPassword" />
           </label>
           <label>
             {t('newPassword')}
-            <input
+            <FormInput
               type="password"
               dir="ltr"
               required
               minLength={12}
               maxLength={128}
               autoComplete="new-password"
+              aria-label={t('newPassword')}
+              name="newPassword"
+              aria-describedby="error-newPassword"
               value={newPassword}
               onChange={(e) => setNew(e.target.value)}
             />
+            <FieldError name="newPassword" />
           </label>
           <label>
             {t('confirmPassword')}
-            <input
+            <FormInput
               type="password"
               dir="ltr"
               required
               minLength={12}
               maxLength={128}
               autoComplete="new-password"
+              aria-label={t('confirmPassword')}
+              name="confirm"
+              aria-describedby="error-confirm"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
             />
+            <FieldError name="confirm" />
           </label>
           <button className="button button-primary" disabled={busy}>
             <ShieldCheck size={17} />
             {busy ? t('saving') : t('savePassword')}
           </button>
-        </form>
+        </ValidatedForm>
       </section>
     </div>
   );

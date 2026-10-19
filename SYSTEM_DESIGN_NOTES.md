@@ -655,3 +655,9 @@ useRemote يربط النتيجة بعنوان الطلب، ويلغي الطل�
 - أصلحنا 50 ألف سجل seed معروف وسمينا سجل UI التجريبي عبدالله العتيبي بدل النص التجريبي. لم نحذف طلبات أو نغير الإجماليات؛ يحفظ سكريبت التنظيف نسخة أسماء محلية خارج Git ويتحقق من العدد ومجموع المبالغ.
 - أسماء حسابي التجربة أصبحت عبدالله العتيبي وخالد الدوسري، مع بقاء بيانات الدخول الموثقة نفسها. استبدلنا أحرف avatars المنفردة بأيقونة مستخدم.
 - التحقق: لا أسماء مختلطة عربية/لاتينية بالطلبات المحلية؛ العدد والمبالغ محفوظان. جربنا زر المظهر وبقاء الاختيار بعد reload، ونجح build والاختبارات الـ14.
+
+### Frontend validation and clearer light theme
+
+- React Hook Form + Zod validate login, new orders, agent creation, password changes and page jumps. A small shared `ValidatedForm` keeps the existing controlled values (including restored order attempts), owns field errors, and disables native browser validation with `noValidate`. Errors appear beside their fields in Arabic/English and invalid inputs have a visible border. Existing errors are checked again when leaving a field; submit validates the entire form.
+- Frontend validation improves feedback only. Backend validation, catalog pricing and idempotency remain authoritative. The tradeoff is maintaining compatible rules on both sides; cross-field password and invalid-order tests cover the key cases.
+- Light tables use alternating rows, visible separators, darker captions and distinct status colors. Status dots are 9px in both themes. Removed the decorative Workspace breadcrumb because there is no workspace switching feature; the sidebar label now simply describes the local environment.

@@ -1,3 +1,5 @@
+import { ValidatedForm, FieldError, FormInput } from '../../components/ValidatedForm';
+import { agentSchema } from '../../lib/forms/schemas';
 import { useRef, useState, type FormEvent } from 'react';
 import { Plus, Users, UserRoundPlus, UserRound, ShieldCheck } from 'lucide-react';
 import { api, jsonBody } from '../../api/client';
@@ -201,7 +203,7 @@ function AddAgent({ onClose, onAdded }: { onClose: () => void; onAdded: () => vo
   const lock = useRef(false);
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (lock.current || !name.trim() || password.length < 12) return;
+    if (lock.current) return;
     lock.current = true;
     setBusy(true);
     setError(undefined);
@@ -225,7 +227,12 @@ function AddAgent({ onClose, onAdded }: { onClose: () => void; onAdded: () => vo
         if (!busy) onClose();
       }}
     >
-      <form className="modal-body agent-form" onSubmit={submit}>
+      <ValidatedForm
+        className="modal-body agent-form"
+        schema={agentSchema}
+        values={{ name, email, password }}
+        onSubmit={submit}
+      >
         <div className="modal-intro">
           <span className="heading-icon">
             <UserRoundPlus size={22} />
@@ -235,39 +242,51 @@ function AddAgent({ onClose, onAdded }: { onClose: () => void; onAdded: () => vo
         {!!error && <ErrorNotice error={error} />}
         <label>
           {t('name')}
-          <input
+          <FormInput
             autoFocus
             required
             maxLength={100}
+            aria-label={t('name')}
+            name="name"
+            aria-describedby="error-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+          <FieldError name="name" />
         </label>
         <label>
           {t('email')}
-          <input
+          <FormInput
             type="email"
             dir="ltr"
             required
             maxLength={254}
             autoComplete="off"
+            aria-label={t('email')}
+            name="email"
+            aria-describedby="error-email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          <FieldError name="email" />
         </label>
         <label>
           {t('initialPassword')}
-          <input
+          <FormInput
             type="password"
             dir="ltr"
             required
             minLength={12}
             maxLength={128}
             autoComplete="new-password"
+            aria-label={t('password')}
+            name="password"
+            aria-describedby="error-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <small>{t('passwordHint')}</small>
+          <FieldError name="password" />
         </label>
         <div className="modal-actions">
           <button
@@ -283,7 +302,7 @@ function AddAgent({ onClose, onAdded }: { onClose: () => void; onAdded: () => vo
             {t(busy ? 'adding' : 'addAgent')}
           </button>
         </div>
-      </form>
+      </ValidatedForm>
     </Modal>
   );
 }

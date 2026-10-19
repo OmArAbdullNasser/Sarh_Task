@@ -73,3 +73,32 @@ it('timeout freezes the form and retries the same key and payload without a seco
   await waitFor(() => expect(screen.getByLabelText('Full name')).toHaveValue(''));
   expect(prepareCount).toBe(2);
 });
+
+it('shows translated field errors and never creates an invalid order', async () => {
+  vi.mocked(api).mockImplementation(async (url: string) => {
+    if (url === '/api/products') return { data: [product] };
+    if (url === '/api/orders/attempts') return { attempt };
+    throw new Error(`Invalid order must not reach ${url}`);
+  });
+  const { container } = render(
+    <MemoryRouter initialEntries={['/orders/new?lang=en']}>
+      <CreateOrderPage />
+    </MemoryRouter>,
+  );
+  await screen.findByRole('button', { name: 'Choose a product' });
+  expect(container.querySelector('form')).toHaveAttribute('novalidate');
+  fireEvent.change(screen.getByLabelText('Email address'), { target: { value: 'invalid' } });
+  fireEvent.change(screen.getByLabelText('Quantity'), { target: { value: '1.5' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Create order' }));
+  await screen.findByText('Enter a valid email address.');
+  expect(screen.getByText('Enter a whole number from 1 to 1,000.')).toBeVisible();
+  expect(screen.getAllByText('This field is required.')).toHaveLength(2);
+  expect(vi.mocked(api).mock.calls.filter(([url]) => url === '/api/orders')).toHaveLength(0);
+  fireEvent.change(screen.getByLabelText('Email address'), {
+    target: { value: 'omar@example.com' },
+  });
+  fireEvent.blur(screen.getByLabelText('Email address'));
+  await waitFor(() =>
+    expect(screen.queryByText('Enter a valid email address.')).not.toBeInTheDocument(),
+  );
+});

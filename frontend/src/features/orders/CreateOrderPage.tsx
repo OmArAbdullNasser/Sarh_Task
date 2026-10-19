@@ -1,3 +1,5 @@
+import { ValidatedForm, FieldError, FormInput } from '../../components/ValidatedForm';
+import { orderSchema } from '../../lib/forms/schemas';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -31,7 +33,6 @@ export function CreateOrderPage() {
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState<unknown>();
   const [uncertain, setUncertain] = useState(false);
-  const [invalid, setInvalid] = useState(false);
   const [saved, setSaved] = useState<{ id: string; deleted: boolean }>();
   const [restored, setRestored] = useState(false);
   const [priceChanged, setPriceChanged] = useState(false);
@@ -138,7 +139,6 @@ export function CreateOrderPage() {
     submitted.current = input;
     setBusy(true);
     setError(undefined);
-    setInvalid(false);
     setSaved(undefined);
     setPriceChanged(false);
     try {
@@ -181,25 +181,6 @@ export function CreateOrderPage() {
   }
   function submit(event: FormEvent) {
     event.preventDefault();
-    const valid =
-      name.trim().length > 0 &&
-      name.trim().length <= 150 &&
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) &&
-      lines.length >= 1 &&
-      lines.length <= 5 &&
-      lines.every(
-        (line) =>
-          line.productId &&
-          Number.isInteger(line.quantity) &&
-          line.quantity >= 1 &&
-          line.quantity <= 1000 &&
-          line.expectedUnitPriceMinor > 0,
-      ) &&
-      new Set(lines.map((l) => l.productId)).size === lines.length;
-    if (!valid) {
-      setInvalid(true);
-      return;
-    }
     void send({
       customerName: name.trim(),
       customerEmail: email.trim().toLowerCase(),
@@ -294,7 +275,12 @@ export function CreateOrderPage() {
           <Loading label={t('recovering')} />
         </section>
       ) : (
-        <form className="create-layout" onSubmit={submit}>
+        <ValidatedForm
+          className="create-layout"
+          schema={orderSchema}
+          values={{ customerName: name, customerEmail: email, items: lines }}
+          onSubmit={submit}
+        >
           <div className="create-main">
             <section className="panel form-panel">
               <div className="form-section-heading">
@@ -310,27 +296,35 @@ export function CreateOrderPage() {
               <div className="form-grid">
                 <label>
                   {t('customerName')}
-                  <input
+                  <FormInput
                     required
                     maxLength={150}
                     placeholder={t('customerNamePlaceholder')}
                     disabled={locked}
+                    aria-label={t('customerName')}
+                    name="customerName"
+                    aria-describedby="error-customerName"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
+                  <FieldError name="customerName" />
                 </label>
                 <label>
                   {t('email')}
-                  <input
+                  <FormInput
                     required
                     type="email"
                     dir="ltr"
                     maxLength={254}
                     placeholder={t('customerEmailPlaceholder')}
                     disabled={locked}
+                    aria-label={t('email')}
+                    name="customerEmail"
+                    aria-describedby="error-customerEmail"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
+                  <FieldError name="customerEmail" />
                 </label>
               </div>
             </section>
@@ -375,16 +369,20 @@ export function CreateOrderPage() {
                             )
                           }
                         />
+                        <FieldError name={`items.${index}.productId`} />
                       </div>
                       <label className="line-quantity">
                         {t('quantity')}
-                        <input
+                        <FormInput
                           type="number"
                           required
                           min={1}
                           max={1000}
                           step={1}
                           disabled={locked}
+                          aria-label={t('quantity')}
+                          name={`items.${index}.quantity`}
+                          aria-describedby={`error-items.${index}.quantity`}
                           value={Number.isNaN(line.quantity) ? '' : line.quantity}
                           onChange={(e) =>
                             setLines((previous) =>
@@ -394,6 +392,7 @@ export function CreateOrderPage() {
                             )
                           }
                         />
+                        <FieldError aria-label={t('quantity')} name={`items.${index}.quantity`} />
                       </label>
                       <div className="line-price">
                         <span className="field-caption">{t('unitPrice')}</span>
@@ -424,11 +423,6 @@ export function CreateOrderPage() {
                 {t('addItem')}
               </button>
             </section>
-            {invalid && (
-              <div className="notice notice-error" role="alert">
-                {t('requiredFields')}
-              </div>
-            )}
             <p className="list-footnote">{t('draftLost')}</p>
           </div>
           <aside className="summary-column">
@@ -482,7 +476,7 @@ export function CreateOrderPage() {
               </div>
             </div>
           </aside>
-        </form>
+        </ValidatedForm>
       )}
     </>
   );

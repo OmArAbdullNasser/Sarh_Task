@@ -7,7 +7,7 @@
   "newOrder": "New order",
   "team": "Team members",
   "apiDocs": "API documentation",
-  "localWorkspace": "Local workspace",
+  "localWorkspace": "Local environment",
   "admin": "Administrator",
   "agent": "Agent",
   "logout": "Sign out",
@@ -169,5 +169,15 @@
   "showingTeam": "Showing {from}–{to} of {total} team members",
   "menu": "Open navigation",
   "lightTheme": "Switch to light theme",
-  "darkTheme": "Switch to dark theme"
+  "darkTheme": "Switch to dark theme",
+  "validationRequired": "This field is required.",
+  "validationEmail": "Enter a valid email address.",
+  "validationNameMax": "The name is too long.",
+  "validationPasswordLength": "Use 12–128 characters.",
+  "validationPasswordMatch": "Passwords do not match.",
+  "validationDifferentPassword": "Choose a different password from your current one.",
+  "validationQuantity": "Enter a whole number from 1 to 1,000.",
+  "validationProductRequired": "Choose a product.",
+  "validationDuplicateProduct": "This product is already selected.",
+  "validationPageRange": "Enter a valid page number within the available pages."
 }

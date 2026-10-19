@@ -7,7 +7,7 @@
   "newOrder": "طلب جديد",
   "team": "فريق العمل",
   "apiDocs": "توثيق الواجهة البرمجية",
-  "localWorkspace": "مساحة عمل محلية",
+  "localWorkspace": "بيئة تشغيل محلية",
   "admin": "مدير النظام",
   "agent": "موظف",
   "logout": "تسجيل الخروج",
@@ -169,5 +169,15 @@
   "showingTeam": "عرض {from}–{to} من {total} موظفين",
   "menu": "فتح القائمة",
   "lightTheme": "تفعيل المظهر الفاتح",
-  "darkTheme": "تفعيل المظهر الداكن"
+  "darkTheme": "تفعيل المظهر الداكن",
+  "validationRequired": "الحقل ده مطلوب.",
+  "validationEmail": "اكتب بريد إلكتروني صحيح.",
+  "validationNameMax": "الاسم أطول من الحد المسموح.",
+  "validationPasswordLength": "كلمة المرور لازم تكون من ١٢ إلى ١٢٨ حرف.",
+  "validationPasswordMatch": "تأكيد كلمة المرور مش مطابق.",
+  "validationDifferentPassword": "اختار كلمة مرور مختلفة عن الحالية.",
+  "validationQuantity": "اكتب كمية صحيحة من ١ إلى ١٠٠٠.",
+  "validationProductRequired": "اختار منتج.",
+  "validationDuplicateProduct": "المنتج ده موجود بالفعل.",
+  "validationPageRange": "اكتب رقم صحيح ضمن الصفحات المتاحة."
 }

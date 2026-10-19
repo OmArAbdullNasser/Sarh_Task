@@ -1,3 +1,5 @@
+import { ValidatedForm, FieldError, FormInput } from './ValidatedForm';
+import { pageSchema } from '../lib/forms/schemas';
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useI18n } from '../lib/i18n';
@@ -73,7 +75,9 @@ export function Pagination({
           <ChevronRight className="directional" size={17} />
         </button>
       </div>
-      <form
+      <ValidatedForm
+        schema={pageSchema(Math.min(pages, 10000))}
+        values={{ page: jump.trim() ? Number(jump) : NaN }}
         className="page-jump"
         onSubmit={(event) => {
           event.preventDefault();
@@ -84,7 +88,9 @@ export function Pagination({
           }
         }}
       >
-        <input
+        <FormInput
+          name="page"
+          aria-describedby="error-page"
           aria-label={t('goPage')}
           placeholder={t('goPage')}
           type="number"
@@ -94,7 +100,8 @@ export function Pagination({
           onChange={(e) => setJump(e.target.value)}
         />
         <button className="text-button">{t('go')}</button>
-      </form>
+        <FieldError name="page" />
+      </ValidatedForm>
     </div>
   );
 }

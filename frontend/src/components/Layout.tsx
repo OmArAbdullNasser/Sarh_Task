@@ -11,7 +11,6 @@ import {
   Layers3,
   Menu,
   X,
-  ChevronRight,
   UserRound,
 } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthProvider';
@@ -163,8 +162,6 @@ export function Layout() {
             >
               <Menu size={21} />
             </button>
-            <span>{t('workspace')}</span>
-            <ChevronRight size={14} className="directional" />
             <strong>{title}</strong>
           </div>
           <div className="topbar-actions">
