@@ -1,8 +1,8 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SARH — Duplicate proof</title><style>*{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:#203c30;font:15px system-ui;padding:42px}main{max-width:960px;margin:auto}.brand{color:#087f68;font-size:13px;letter-spacing:2px;font-weight:750}h1{font-size:32px;letter-spacing:-1px;margin:12px 0}p{color:#7b9182;font-size:13px;line-height:1.8}.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid #c8e3d2;background:#e9f5ed;color:#208351;padding:7px 11px;border-radius:5px;font-size:12px;margin:14px 0 18px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#112c22;border:1px solid #284c39;color:#d7eadc;padding:26px;border-radius:10px;font:12px/1.8 ui-monospace,monospace;box-shadow:0 10px 30px #244c3112}.foot{font-size:11px;color:#8ca28e;margin-top:20px}code{background:#e9f0ea;padding:2px 5px;border-radius:3px}</style><main><div class="brand">SARH / VERIFICATION</div><h1>Eight requests. One order.</h1><p>Actual captured test output from the local Express API and a real, isolated MongoDB database.<br>The test asserts one 201 response, seven 200 replays, a shared order ID, and exactly one committed record.</p><div class="badge">✓ Duplicate-creation proof passed</div><pre>&gt; sarh-backend@0.1.0 proof:duplicates
 &gt; node --import tsx --test --test-name-pattern=&#x27;parallel creates&#x27; tests/integration.test.ts
 
-Duplicate proof: 8 parallel HTTP requests =&gt; 1 order (6ad647dda05c92b6aab43ada), total=37650 halalas
-✔ parallel creates, lost response replay, conflict, and soft-delete leave exactly one order (373.424791ms)
+Duplicate proof: 8 parallel HTTP requests =&gt; 1 order (6ad66a03eefc9449287a0460), total=37650 halalas
+✔ parallel creates, lost response replay, conflict, and soft-delete leave exactly one order (320.597375ms)
 ℹ tests 1
 ℹ suites 0
 ℹ pass 1
@@ -10,4 +10,4 @@ Duplicate proof: 8 parallel HTTP requests =&gt; 1 order (6ad647dda05c92b6aab43ad
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 1000.872709</pre><p class="foot">Reproduce: <code>npm --prefix backend run proof:duplicates</code><br>The test also checks conflicting input, a lost-response replay, and replay after soft deletion. This page only presents the captured transcript; it does not run or simulate a test.</p></main></html>
+ℹ duration_ms 851.919459</pre><p class="foot">Reproduce: <code>npm --prefix backend run proof:duplicates</code><br>The test also checks conflicting input, a lost-response replay, and replay after soft deletion. This page only presents the captured transcript; it does not run or simulate a test.</p></main></html>
