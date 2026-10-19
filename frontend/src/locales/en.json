@@ -179,5 +179,12 @@
   "validationQuantity": "Enter a whole number from 1 to 1,000.",
   "validationProductRequired": "Choose a product.",
   "validationDuplicateProduct": "This product is already selected.",
-  "validationPageRange": "Enter a valid page number within the available pages."
+  "validationPageRange": "Enter a valid page number within the available pages.",
+  "amountRange": "Order total range (SAR)",
+  "amountFrom": "From (SAR)",
+  "amountTo": "To (SAR)",
+  "applyRange": "Apply range",
+  "clearRange": "Clear range",
+  "validationAmount": "Enter a non-negative amount with up to two decimal places.",
+  "validationAmountRange": "The maximum must be greater than or equal to the minimum."
 }

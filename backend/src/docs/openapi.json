@@ -608,6 +608,30 @@
               "default": "desc"
             },
             "description": ""
+          },
+          {
+            "name": "minTotalMinor",
+            "in": "query",
+            "required": false,
+            "description": "Minimum order total. Inclusive integer halalas (SAR × 100); 0 is allowed. Minimum must not exceed maximum.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "example": 10000
+          },
+          {
+            "name": "maxTotalMinor",
+            "in": "query",
+            "required": false,
+            "description": "Maximum order total. Inclusive integer halalas (SAR × 100); 0 is allowed. Minimum must not exceed maximum.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "example": 50000
           }
         ]
       },

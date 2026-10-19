@@ -1,15 +1,30 @@
 import { z } from 'zod';
 import { email, objectId, pagination } from '../../lib/validation.js';
 export const orderStatuses = ['pending', 'processing', 'completed', 'cancelled'] as const;
+const amountBound = z
+  .string()
+  .regex(/^\d+$/)
+  .transform(Number)
+  .pipe(z.number().int().min(0).max(Number.MAX_SAFE_INTEGER))
+  .optional();
 export const listOrdersInput = z
   .object({
     ...pagination,
     search: z.string().trim().max(254).default(''),
     status: z.enum(orderStatuses).optional(),
+    minTotalMinor: amountBound,
+    maxTotalMinor: amountBound,
     sortBy: z.enum(['createdAt', 'totalMinor']).default('createdAt'),
     direction: z.enum(['asc', 'desc']).default('desc'),
   })
-  .strict();
+  .strict()
+  .refine(
+    (v) =>
+      v.minTotalMinor === undefined ||
+      v.maxTotalMinor === undefined ||
+      v.minTotalMinor <= v.maxTotalMinor,
+    { message: 'Minimum total must not exceed maximum.', path: ['maxTotalMinor'] },
+  );
 export const prepareAttemptInput = z.object({ previousAttemptId: objectId.optional() }).strict();
 export const submissionInput = z
   .object({

@@ -278,6 +278,61 @@ test('prefix search, filtering, stable sort and pagination match database conten
   assert.equal(arabic.body.total, 1);
 });
 
+test('amount ranges are inclusive, compose with filters, and validate integer halalas', async () => {
+  const sample = await Order.findOne({ state: 'committed', deletedAt: null });
+  assert.ok(sample?.totalMinor);
+  const totalMinor = sample.totalMinor;
+  for (const bounds of [
+    { minTotalMinor: totalMinor, maxTotalMinor: totalMinor },
+    { minTotalMinor: 0, maxTotalMinor: totalMinor },
+    { minTotalMinor: totalMinor },
+  ]) {
+    const filter = {
+      state: 'committed' as const,
+      deletedAt: null,
+      status: 'pending' as const,
+      totalMinor: {
+        $gte: bounds.minTotalMinor,
+        ...('maxTotalMinor' in bounds ? { $lte: bounds.maxTotalMinor } : {}),
+      },
+    };
+    const expected = await Order.find(filter).sort({ totalMinor: 1, _id: 1 }).lean();
+    const result = await request(app)
+      .get('/api/orders')
+      .set('Cookie', agentCookie)
+      .query({ ...bounds, status: 'pending', sortBy: 'totalMinor', direction: 'asc', pageSize: 1 })
+      .expect(200);
+    assert.equal(result.body.total, expected.length);
+    assert.deepEqual(
+      result.body.data.map((o: { _id: string }) => o._id),
+      expected.slice(0, 1).map((o) => String(o._id)),
+    );
+  }
+  const combined = await request(app)
+    .get('/api/orders')
+    .set('Cookie', agentCookie)
+    .query({ search: 'OM', minTotalMinor: totalMinor, maxTotalMinor: totalMinor })
+    .expect(200);
+  assert.equal(
+    combined.body.total,
+    await Order.countDocuments({
+      state: 'committed',
+      deletedAt: null,
+      totalMinor,
+      customerNameSearch: /^om/,
+    }),
+  );
+  for (const query of [
+    { minTotalMinor: -1 },
+    { maxTotalMinor: '1e3' },
+    { minTotalMinor: '1.5' },
+    { minTotalMinor: 200, maxTotalMinor: 100 },
+    { maxTotalMinor: '9007199254740992' },
+  ]) {
+    await request(app).get('/api/orders').set('Cookie', agentCookie).query(query).expect(400);
+  }
+});
+
 test('admin manages agents, first password change is enforced, disable is immediate', async () => {
   await write('post', '/api/users', agentCookie)
     .send({ name: 'Blocked', email: 'blocked@test.local', password })

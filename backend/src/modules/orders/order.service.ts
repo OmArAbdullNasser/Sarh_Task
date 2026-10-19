@@ -22,6 +22,12 @@ const fingerprint = (input: Submission) =>
 export async function listOrders(query: ListOrders) {
   const filter: QueryFilter<unknown> = { ...visible };
   if (query.status) filter.status = query.status;
+  if (query.minTotalMinor !== undefined || query.maxTotalMinor !== undefined) {
+    filter.totalMinor = {
+      ...(query.minTotalMinor !== undefined ? { $gte: query.minTotalMinor } : {}),
+      ...(query.maxTotalMinor !== undefined ? { $lte: query.maxTotalMinor } : {}),
+    };
+  }
   if (query.search) {
     const prefix = `^${escapeRegex(normalizeSearch(query.search))}`;
     filter.$or = [

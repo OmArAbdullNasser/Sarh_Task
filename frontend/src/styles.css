@@ -2697,3 +2697,49 @@ input[aria-invalid='true'],
 [data-theme='dark'] input[aria-invalid='true'] {
   border-color: #ed8798;
 }
+.amount-filter {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+.amount-filter-title {
+  align-self: center;
+  font-size: 12px;
+  font-weight: 600;
+  margin-inline-end: auto;
+}
+.amount-filter label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 155px;
+  font-size: 11px;
+  color: var(--ink);
+}
+.amount-filter input {
+  width: 100%;
+  height: 38px;
+}
+.amount-filter .button {
+  margin-top: 21px;
+  min-height: 38px;
+}
+.amount-filter .field-error {
+  margin: 0;
+}
+@media (max-width: 650px) {
+  .amount-filter-title {
+    flex-basis: 100%;
+  }
+  .amount-filter label {
+    flex: 1;
+    min-width: 115px;
+  }
+  .amount-filter .button {
+    margin-top: 0;
+  }
+}

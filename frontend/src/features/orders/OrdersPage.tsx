@@ -1,3 +1,4 @@
+import { AmountRange } from './components/AmountRange';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
@@ -29,6 +30,8 @@ export function OrdersPage() {
   const { t, href, money, date, time, number } = useI18n();
   const [params, setParams] = useSearchParams();
   const querySearch = params.get('search') ?? '';
+  const minTotalMinor = params.get('minTotalMinor') ?? '';
+  const maxTotalMinor = params.get('maxTotalMinor') ?? '';
   const [search, setSearch] = useState(querySearch);
   const status = statuses.includes(params.get('status') as Status)
     ? (params.get('status') as Status)
@@ -38,6 +41,8 @@ export function OrdersPage() {
   const sortBy = params.get('sortBy') === 'totalMinor' ? 'totalMinor' : 'createdAt';
   const direction = params.get('direction') === 'asc' ? 'asc' : 'desc';
   const query = new URLSearchParams({ page: String(page), pageSize: '50', sortBy, direction });
+  if (minTotalMinor) query.set('minTotalMinor', minTotalMinor);
+  if (maxTotalMinor) query.set('maxTotalMinor', maxTotalMinor);
   if (status) query.set('status', status);
   if (querySearch) query.set('search', querySearch);
   const { data, error, loading, retry } = useRemote<Page<Order>>(`/api/orders?${query}`);
@@ -200,6 +205,13 @@ export function OrdersPage() {
             </button>
           </div>
         </div>
+        <AmountRange
+          min={minTotalMinor}
+          max={maxTotalMinor}
+          onApply={(minTotalMinor, maxTotalMinor) =>
+            update({ minTotalMinor, maxTotalMinor, page: '1' })
+          }
+        />
         <div className="orders-table-area" aria-busy={loading}>
           {loading ? (
             <Loading label={t('loadingOrders')} />
@@ -218,7 +230,13 @@ export function OrdersPage() {
                 className="button button-secondary"
                 onClick={() => {
                   setSearch('');
-                  update({ search: '', status: '', page: '1' });
+                  update({
+                    search: '',
+                    status: '',
+                    minTotalMinor: '',
+                    maxTotalMinor: '',
+                    page: '1',
+                  });
                 }}
               >
                 {t('clearFilters')}

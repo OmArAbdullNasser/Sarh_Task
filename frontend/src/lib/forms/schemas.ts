@@ -1,3 +1,4 @@
+import { parseSar } from '../money';
 import { z } from 'zod/v4';
 const required = z.string().trim().min(1, 'validationRequired');
 const email = required.max(254, 'validationEmail').email('validationEmail');
@@ -67,3 +68,17 @@ export const pageSchema = (max: number) =>
       .min(1, 'validationPageRange')
       .max(max, 'validationPageRange'),
   });
+
+const optionalSar = z
+  .string()
+  .refine((value) => value === '' || parseSar(value) !== undefined, 'validationAmount');
+export const amountRangeSchema = z
+  .object({ minAmount: optionalSar, maxAmount: optionalSar })
+  .refine(
+    (v) => {
+      const min = parseSar(v.minAmount),
+        max = parseSar(v.maxAmount);
+      return min === undefined || max === undefined || min <= max;
+    },
+    { path: ['maxAmount'], message: 'validationAmountRange' },
+  );

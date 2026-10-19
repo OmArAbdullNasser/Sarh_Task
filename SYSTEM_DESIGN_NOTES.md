@@ -663,3 +663,10 @@ useRemote يربط النتيجة بعنوان الطلب، ويلغي الطل�
 - Light tables use alternating rows, visible separators, darker captions and distinct status colors. Status dots are 9px in both themes. Removed the decorative Workspace breadcrumb because there is no workspace switching feature; the sidebar label now simply describes the local environment.
 
 - Integer fields (quantity and page jump) now share `IntegerInput`: text input with a numeric keyboard, rejecting non-digits, scientific notation, signs, decimals and values outside the allowed range. Arabic/Persian digits are normalized. Empty input remains editable and is rejected by Zod on submit. The same change handler covers typing, paste and mobile input; backend integer/range validation remains required. Name fields remain Unicode text with required/length validation, email uses email validation, and passwords retain their documented length/cross-field rules without arbitrary character restrictions. Product search now has a 254-character limit too.
+
+### البحث بنطاق إجمالي الطلب
+
+- أضفنا حدًا أدنى وأقصى اختياريين لإجمالي الطلب، مع زر تطبيق ومسح. القيم في الواجهة بالريال حتى منزلتين عشريتين، وتتحول إلى هللات صحيحة بتقسيم النص إلى ريال وهللات، دون ضرب كسر عشري في 100.
+- الـAPI يستقبل `minTotalMinor` و`maxTotalMinor` كهللات صحيحة غير سالبة، ويرفض النطاق المقلوب والقيم غير الآمنة. الفلترة شاملة للطرفين وتُطبق في MongoDB على القائمة والعدد مع نفس فلاتر الاسم/الإيميل والحالة. تغيير النطاق يعيد الصفحة الأولى، وتُحفظ الحدود في رابط الصفحة.
+- لا نحتاج فهرسًا جديدًا: توجد فهارس جزئية على `(totalMinor, _id)` و`(status, totalMinor, _id)` للطلبات الظاهرة. الجمع بين نطاق المبلغ والترتيب بتاريخ الإنشاء أو البحث النصي قد يضيف تكلفة فرز أو فحص؛ نراجع خطة التنفيذ والقياسات عند التوسع قبل إضافة فهارس مركبة إضافية.
+- الاختبارات تغطي شمول الحدود، حدًا واحدًا، دمج الفلاتر وعدد النتائج والتقسيم، رفض المدخلات الخاطئة، التحويل الدقيق ودعم الأرقام العربية. Swagger محدث.
