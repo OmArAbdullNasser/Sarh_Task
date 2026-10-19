@@ -11,12 +11,20 @@ export async function login(req: Request, res: Response) {
   res.json({ user: await service.me(String(user._id)) });
 }
 export async function logout(req: Request, res: Response) {
-  await service.logout(currentUser(req)); clearSession(res); res.status(204).end();
+  await service.logout(currentUser(req));
+  clearSession(res);
+  res.status(204).end();
 }
-export async function me(req: Request, res: Response) { res.json({ user: await service.me(currentUser(req).id) }); }
+export async function me(req: Request, res: Response) {
+  res.json({ user: await service.me(currentUser(req).id) });
+}
 export async function changePassword(req: Request, res: Response) {
   const input = changePasswordInput.parse(req.body);
-  const user = await service.changePassword(currentUser(req), input.currentPassword, input.newPassword);
+  const user = await service.changePassword(
+    currentUser(req),
+    input.currentPassword,
+    input.newPassword,
+  );
   issueSession(res, String(user._id), user.sessionVersion);
   res.json({ user: await service.me(String(user._id)) });
 }

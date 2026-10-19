@@ -10,4 +10,6 @@ export async function connectDatabase() {
   // Await unique indexes before accepting traffic. No destructive syncIndexes().
   await Promise.all([User.createIndexes(), Product.createIndexes(), Order.createIndexes()]);
 }
-export async function disconnectDatabase() { await mongoose.disconnect(); }
+export async function disconnectDatabase() {
+  await mongoose.disconnect();
+}

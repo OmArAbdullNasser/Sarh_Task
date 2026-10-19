@@ -16,7 +16,10 @@ export function createApp() {
   app.disable('x-powered-by');
   app.use(helmet());
   app.use(docsRoutes);
-  app.use('/api', (_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
+  app.use('/api', (_req, res, next) => {
+    res.set('Cache-Control', 'no-store');
+    next();
+  });
   app.use('/api', csrfProtection);
   app.use(express.json({ limit: '32kb' }));
   app.use(cookieParser());
@@ -28,7 +31,9 @@ export function createApp() {
   app.use('/api/orders', authenticate, requirePasswordChanged, orderRoutes);
   app.use('/api/products', authenticate, requirePasswordChanged, productRoutes);
   app.use('/api/users', authenticate, requirePasswordChanged, userRoutes);
-  app.use((_req, res) => { res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Route not found.' } }); });
+  app.use((_req, res) => {
+    res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Route not found.' } });
+  });
   app.use(errorHandler);
   return app;
 }

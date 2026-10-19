@@ -11,7 +11,11 @@ const schema = z.object({
 const parsed = schema.safeParse(process.env);
 if (!parsed.success) {
   // Field names only: never log secret values.
-  throw new Error(`Invalid environment configuration: ${parsed.error.issues.map(i => i.path.join('.')).join(', ')}`);
+  throw new Error(
+    `Invalid environment configuration: ${parsed.error.issues.map((i) => i.path.join('.')).join(', ')}`,
+  );
 }
 export const env = parsed.data;
-export const allowedOrigins = new Set(env.APP_ORIGINS.split(',').map(s => new URL(s.trim()).origin));
+export const allowedOrigins = new Set(
+  env.APP_ORIGINS.split(',').map((s) => new URL(s.trim()).origin),
+);
