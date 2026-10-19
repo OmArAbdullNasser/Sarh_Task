@@ -1,3 +1,5 @@
+import { setTimeout as delay } from 'node:timers/promises';
+import { orderStats } from './order.stats.js';
 import type { Request, Response } from 'express';
 import { currentUser } from '../../middleware/authenticate.js';
 import { objectId } from '../../lib/validation.js';
@@ -30,4 +32,21 @@ export async function create(req: Request, res: Response) {
   const key = idempotencyKey.parse(req.get('Idempotency-Key'));
   const result = await service.createOrder(currentUser(req).id, input.attemptId, key, input.order);
   res.status(result.replayed ? 200 : 201).json(result);
+}
+
+export async function stats(_req: Request, res: Response) {
+  const controller = new AbortController();
+  const cancel = () => controller.abort();
+  res.once('close', cancel);
+  try {
+    // Deliberately slow for optional task O1. Async delay never blocks other routes.
+    await delay(4000, undefined, { signal: controller.signal });
+    if (controller.signal.aborted) return;
+    const result = await orderStats();
+    if (!controller.signal.aborted) res.json(result);
+  } catch (error) {
+    if (!controller.signal.aborted) throw error;
+  } finally {
+    res.off('close', cancel);
+  }
 }

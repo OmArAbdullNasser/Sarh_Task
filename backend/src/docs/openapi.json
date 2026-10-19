@@ -991,6 +991,100 @@
           }
         ]
       }
+    },
+    "/api/orders/stats": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Global order counts and today revenue (deliberate 4-second delay)",
+        "operationId": "getOrderStats",
+        "description": "O1: async 4-second delay, canceled on disconnect before aggregation. Independent of list filters. Counts exclude deleted/uncommitted orders. Revenue sums completed orders created within today in Asia/Riyadh (inclusive start, exclusive end). Integer halalas; no payment/refund ledger is implied.",
+        "responses": {
+          "200": {
+            "description": "Statistics snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "byStatus",
+                    "revenueTodayMinor",
+                    "currency",
+                    "timeZone",
+                    "dayStart",
+                    "dayEnd",
+                    "generatedAt"
+                  ],
+                  "properties": {
+                    "byStatus": {
+                      "type": "object",
+                      "required": [
+                        "pending",
+                        "processing",
+                        "completed",
+                        "cancelled"
+                      ],
+                      "properties": {
+                        "pending": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "processing": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "completed": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "cancelled": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "revenueTodayMinor": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "currency": {
+                      "type": "string",
+                      "enum": [
+                        "SAR"
+                      ]
+                    },
+                    "timeZone": {
+                      "type": "string",
+                      "enum": [
+                        "Asia/Riyadh"
+                      ]
+                    },
+                    "dayStart": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "dayEnd": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "generatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Initial password change required"
+          }
+        }
+      }
     }
   },
   "components": {

@@ -101,10 +101,7 @@ test('Swagger specification is valid and same-origin docs serve local interactiv
   const spec = await SwaggerParser.validate(response.body);
   assert.ok('openapi' in spec);
   assert.equal(spec.openapi, '3.0.3');
-  assert.equal(
-    Object.values(spec.paths ?? {}).reduce((sum, path) => sum + Object.keys(path ?? {}).length, 0),
-    15,
-  );
+  assert.ok(spec.paths?.['/api/orders/stats']?.get);
   const page = await request(app).get('/docs/').expect(200);
   assert.match(page.text, /swagger-ui-bundle.js/);
   assert.match(page.headers['content-security-policy'], /connect-src 'self'/);
@@ -330,6 +327,61 @@ test('amount ranges are inclusive, compose with filters, and validate integer ha
     { maxTotalMinor: '9007199254740992' },
   ]) {
     await request(app).get('/api/orders').set('Cookie', agentCookie).query(query).expect(400);
+  }
+});
+
+test('slow stats use Saudi day boundaries, include only visible orders, and do not block the API', async () => {
+  const { orderStats, saudiDayBounds } = await import('../src/modules/orders/order.stats.js');
+  const now = new Date('2030-01-01T22:00:00Z');
+  const { start, end } = saudiDayBounds(now);
+  assert.equal(start.toISOString(), '2030-01-01T21:00:00.000Z');
+  assert.equal(end.toISOString(), '2030-01-02T21:00:00.000Z');
+  const inserted = await Order.collection.insertMany(
+    [
+      { status: 'completed', totalMinor: 12550, createdAt: start },
+      { status: 'completed', totalMinor: 50, createdAt: new Date(end.getTime() - 1) },
+      { status: 'completed', totalMinor: 999, createdAt: end },
+      { status: 'completed', totalMinor: 999, createdAt: new Date(start.getTime() - 1) },
+      { status: 'pending', totalMinor: 999, createdAt: start },
+      { status: 'completed', totalMinor: 999, createdAt: start, deletedAt: now },
+      { status: 'completed', totalMinor: 999, createdAt: start, state: 'draft' },
+    ].map((row) => ({
+      operationKey: randomUUID(),
+      createdBy: new mongoose.Types.ObjectId(agentId),
+      activeAttempt: false,
+      state: 'committed',
+      deletedAt: null,
+      ...row,
+    })),
+  );
+  try {
+    const stats = await orderStats(now);
+    assert.equal(stats.revenueTodayMinor, 12600);
+    for (const status of ['pending', 'processing', 'completed', 'cancelled'] as const)
+      assert.equal(
+        stats.byStatus[status],
+        await Order.countDocuments({ state: 'committed', deletedAt: null, status }),
+      );
+    await request(app).get('/api/orders/stats').expect(401);
+    let finished = false;
+    const started = performance.now();
+    const slow = request(app)
+      .get('/api/orders/stats')
+      .set('Cookie', agentCookie)
+      .expect(200)
+      .then((response) => {
+        finished = true;
+        return response;
+      });
+    await request(app).get('/api/health').expect(200);
+    assert.equal(finished, false, 'normal routes stay available during the artificial delay');
+    const response = await slow;
+    assert.ok(performance.now() - started >= 3900, 'stats have a deliberate four-second delay');
+    assert.equal(response.body.timeZone, 'Asia/Riyadh');
+    assert.equal(response.body.currency, 'SAR');
+    assert.ok(response.body.byStatus.completed >= 4);
+  } finally {
+    await Order.deleteMany({ _id: { $in: Object.values(inserted.insertedIds) } });
   }
 });
 

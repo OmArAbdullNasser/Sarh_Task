@@ -6,5 +6,6 @@ orderRoutes.get('/', controller.list);
 orderRoutes.post('/', controller.create);
 orderRoutes.get('/attempts/current', controller.current);
 orderRoutes.post('/attempts', controller.prepare);
+orderRoutes.get('/stats', controller.stats);
 orderRoutes.get('/:id', controller.get);
 orderRoutes.delete('/:id', requireAdmin, controller.remove);

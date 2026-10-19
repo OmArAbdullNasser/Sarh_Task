@@ -62,12 +62,12 @@ Admin can list agents, add an agent with an initial password, and deactivate an 
 ## Verification
 
 ```sh
-npm test           # 10 backend integration tests + 4 frontend tests
+npm test           # backend integration tests + frontend tests
 npm run typecheck  # benchmark scripts, backend, frontend
 npm run build      # both applications
 ```
 
-Backend tests cover real HTTP + MongoDB concurrency, recovery, prices, validation, prefix search, permissions, session revocation, CSRF, and OpenAPI validity. Frontend tests cover stale success/failure, cancellation/unmount, retry, and preserving the same create key/payload after timeout. Browser checks exercised login/logout, both languages, rapid filters, a real order creation and details, and the team-management screen. The optional slow stats and optimistic-create tasks are not implemented.
+Backend tests cover real HTTP + MongoDB concurrency, recovery, prices, validation, prefix search, permissions, session revocation, CSRF, and OpenAPI validity. Frontend tests cover stale success/failure, cancellation/unmount, retry, and preserving the same create key/payload after timeout. Browser checks exercised login/logout, both languages, rapid filters, a real order creation and details, and the team-management screen. Optional O1 (slow statistics) is implemented; O2 (optimistic creation) is intentionally skipped.
 
 Evidence is in [submission/](submission/README.md): screenshots, captured duplicate-proof output, and frontend test output. A still screenshot demonstrates the selected end state, not response timing; the reversed-response automated test supplies the timing proof. A recording can be made following that folder's walkthrough if preferred to the three screenshots.
 
@@ -141,7 +141,7 @@ Prefer reversible archival under an agreed retention policy over irreversible bu
 
 ## What I skipped and why / known limits
 
-- **Optional stats/optimistic creation:** prioritized mandatory correctness, communication, bilingual UI, and agent management.
+- **Optional O2 optimistic creation:** skipped; O1 slow statistics is the single optional task implemented.
 - **Substring/fuzzy search and a second search store:** considered, but indexing/synchronization and recovery cost exceeded this scope; explicit prefix matching is implemented.
 - **Product/customer management, inventory, payments, discounts, status editing, registration and reset email:** outside the agreed console slice. Twenty seeded catalog products are loaded through a bounded endpoint; a larger catalog needs server-side picker search/pagination.
 - **Distributed sessions/rate limits, multi-region writes, replica-set transactions:** unnecessary for the local single-process deployment. The attempt/order uses single-document atomicity; the login limiter resets on process restart.
@@ -151,3 +151,12 @@ Prefer reversible archival under an agreed retention policy over irreversible bu
 - **Deployment/public repository/submission email:** local implementation only. The owner must review the code/decisions and choose repository visibility/access before publishing or submitting.
 
 AI assistance and Omar's decision ownership are disclosed in [DECISIONS.md](DECISIONS.md). All secrets stay out of Git; the demo password is intentionally documented for local evaluation.
+
+
+## Optional O1 — slow statistics
+
+`GET /api/orders/stats` deliberately waits four seconds using an asynchronous timer. The orders screen loads the table and statistics independently: filters, sorting, pagination and navigation remain available. Statistics show counts by status and revenue today across all visible orders, independent of list filters; revenue means completed orders **created** today in Asia/Riyadh, not a payment ledger or completion-day accounting. Deleted orders and uncommitted attempts are excluded. The snapshot shows its update time and has a refresh button; deleting an order refreshes it automatically.
+
+The shared request hook aborts on navigation/unmount, ignores late responses, and displays an error with a manual retry button (one request per click, no automatic retry loop). The backend cancels its artificial delay on disconnect and avoids starting aggregation; an aggregation already started may finish, but its result is not sent to a disconnected client.
+
+Manual check: reload Orders, use filters while statistics load, then navigate to New order before four seconds; Network should show the stats request canceled. To check failure/retry in Chrome DevTools, block only `*/api/orders/stats`, reload, observe the stats error while the table works, remove the block, and click Try again. API/UI tests cover the delay, Saudi midnight boundaries, continued API availability, error/retry and unmount cancellation.

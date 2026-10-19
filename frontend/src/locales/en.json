@@ -186,5 +186,11 @@
   "applyRange": "Apply range",
   "clearRange": "Clear range",
   "validationAmount": "Enter a non-negative amount with up to two decimal places.",
-  "validationAmountRange": "The maximum must be greater than or equal to the minimum."
+  "validationAmountRange": "The maximum must be greater than or equal to the minimum.",
+  "statsTitle": "Order statistics",
+  "statsScope": "All orders, independent of filters. Today’s revenue: completed orders created today, Saudi time.",
+  "statsLoading": "Loading statistics… the orders list remains available.",
+  "refreshStats": "Refresh statistics",
+  "revenueToday": "Revenue today (SAR)",
+  "statsUpdated": "Last updated: {time} · Saudi time"
 }

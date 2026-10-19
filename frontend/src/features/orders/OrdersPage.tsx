@@ -1,3 +1,4 @@
+import { OrderStats } from './components/OrderStats';
 import { AmountRange } from './components/AmountRange';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -51,6 +52,7 @@ export function OrdersPage() {
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<unknown>();
   const [deleted, setDeleted] = useState(false);
+  const [statsRevision, setStatsRevision] = useState(0);
   const update = (values: Record<string, string>, replace = false) =>
     setParams(
       (previous) => {
@@ -88,6 +90,7 @@ export function OrdersPage() {
       await api(`/api/orders/${remove._id}`, { method: 'DELETE' });
       setRemove(undefined);
       setDeleted(true);
+      setStatsRevision((value) => value + 1);
       if (data?.data.length === 1 && page > 1) update({ page: String(page - 1) });
       else retry();
     } catch (e) {
@@ -112,6 +115,7 @@ export function OrdersPage() {
           {t('newOrder')}
         </Link>
       </div>
+      <OrderStats key={statsRevision} />
       <div className="overview-strip">
         <div>
           <span className="overview-icon">
