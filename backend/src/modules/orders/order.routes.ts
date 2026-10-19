@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { requireAdmin } from '../../middleware/authorize.js';
+import * as controller from './order.controller.js';
+export const orderRoutes = Router();
+orderRoutes.get('/', controller.list);
+orderRoutes.post('/', controller.create);
+orderRoutes.get('/attempts/current', controller.current);
+orderRoutes.post('/attempts', controller.prepare);
+orderRoutes.get('/:id', controller.get);
+orderRoutes.delete('/:id', requireAdmin, controller.remove);

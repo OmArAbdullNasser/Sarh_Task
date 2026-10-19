@@ -1,0 +1,1563 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SARH Orders Console API",
+    "version": "0.1.0",
+    "description": "واجهة تجربة الباك محليًا / Local backend API playground.\n\n**Quick walkthrough:**\n1. Auth → login → Try it out → choose Admin or Agent → Execute.\n2. Products → GET: copy a product `_id` and `unitPriceMinor`.\n3. Order attempts → POST with `{}`: copy `_id` and `operationKey`.\n4. Orders → POST: use that `_id` as `attemptId`, put `operationKey` in `Idempotency-Key`, and fill the order with the product values.\n5. Execute the identical create request again: response is `200` with the SAME order ID, not a new order.\n6. Acknowledge successful creation using `previousAttemptId` when preparing the next form.\n\nSwagger UI adds `X-SARH-Request: 1` automatically. Open this UI on the same origin as the API (normally http://localhost:4000/docs/); the browser sends Origin and manages the HttpOnly cookie. Do not paste a cookie in Authorize: browsers cannot manually set that forbidden header. Standalone clients should use their own cookie jar and an Origin from APP_ORIGINS plus the custom header.\n\nAmounts are integer **halalas**, currency SAR. Dates are UTC. Admin routes are labeled. These calls affect the local development database."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Same origin as Swagger UI (keeps login cookies working)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Health"
+    },
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Products"
+    },
+    {
+      "name": "Order attempts"
+    },
+    {
+      "name": "Orders"
+    },
+    {
+      "name": "Users"
+    }
+  ],
+  "security": [
+    {
+      "cookieAuth": []
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Check API and database health",
+        "operationId": "get__api_health",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database not connected.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "ok"
+                  ],
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "1. Sign in (start here)",
+        "operationId": "post__api_auth_login",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [
+                    "user"
+                  ]
+                }
+              }
+            },
+            "headers": {
+              "Set-Cookie": {
+                "description": "sarh_session; HttpOnly; SameSite=Strict; Max-Age=28800; Secure in production. Managed by the browser.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Use Try it out, select a seeded example, then Execute. The same-origin browser stores the HttpOnly cookie automatically; no Authorize/paste-token step is needed. Agent and Admin share the documented development password. Login rate limit: 30 attempts per 15 minutes per IP.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginInput"
+              },
+              "examples": {
+                "admin": {
+                  "summary": "Seeded Admin",
+                  "value": {
+                    "email": "admin@sarh.local",
+                    "password": "SarhDemo2026!"
+                  }
+                },
+                "agent": {
+                  "summary": "Seeded Agent",
+                  "value": {
+                    "email": "agent@sarh.local",
+                    "password": "SarhDemo2026!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppHeader"
+          }
+        ]
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Check the signed-in account",
+        "operationId": "get__api_auth_me",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Available even when first password change is required."
+      }
+    },
+    "/api/auth/change-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Change password (required for newly created agents)",
+        "operationId": "post__api_auth_change-password",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Current and new passwords must differ. Invalidates all previous sessions and issues a fresh cookie for this browser.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordInput"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppHeader"
+          }
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Sign out on all devices",
+        "operationId": "post__api_auth_logout",
+        "responses": {
+          "204": {
+            "description": "Success, no response body"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Increments account session version and clears the cookie. No body required.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppHeader"
+          }
+        ]
+      }
+    },
+    "/api/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "2. Get product IDs and current prices",
+        "operationId": "get__api_products",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    },
+                    "currency": {
+                      "type": "string",
+                      "enum": [
+                        "SAR"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "currency"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Copy a product _id and unitPriceMinor for the create-order request. Prices are halalas, not riyals.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "description": "Optional name prefix; at most 50 active products are returned."
+          }
+        ]
+      }
+    },
+    "/api/orders/attempts": {
+      "post": {
+        "tags": [
+          "Order attempts"
+        ],
+        "summary": "3. Prepare or resume an order attempt",
+        "operationId": "post__api_orders_attempts",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "attempt": {
+                      "$ref": "#/components/schemas/Attempt"
+                    }
+                  },
+                  "required": [
+                    "attempt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Start with {}. Save attempt._id and operationKey. Parallel calls share one active attempt per employee. After a confirmed success, pass its previousAttemptId to prepare the next form. Passing an unresolved current ID returns 409. A delayed acknowledgment cannot replace a newer attempt.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrepareAttemptInput"
+              },
+              "examples": {
+                "resume": {
+                  "summary": "Prepare/resume current attempt",
+                  "value": {}
+                },
+                "next": {
+                  "summary": "Acknowledge a successful attempt and prepare next",
+                  "value": {
+                    "previousAttemptId": "507f1f77bcf86cd799439011"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppHeader"
+          }
+        ]
+      }
+    },
+    "/api/orders/attempts/current": {
+      "get": {
+        "tags": [
+          "Order attempts"
+        ],
+        "summary": "Recover after a timeout or refresh",
+        "operationId": "get__api_orders_attempts_current",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "attempt": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/Attempt"
+                        }
+                      ],
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "attempt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "null means no active attempt. draft can restore submitted fields for correction; submitted should be retried with its exact saved payload/key; committed means the order already exists. No permanent browser draft is required."
+      }
+    },
+    "/api/orders": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Search, filter, sort and paginate orders",
+        "operationId": "get__api_orders",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Only committed, non-deleted orders. Exact total included; _id breaks sort ties. Unknown query parameters are rejected. Dates are UTC, frontend display is Asia/Riyadh.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "default": 1
+            },
+            "description": ""
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "description": ""
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 254
+            },
+            "description": "Beginning of full customer name OR email, case normalized. Does not match arbitrary middle text."
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "processing",
+                "completed",
+                "cancelled"
+              ]
+            },
+            "description": ""
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "totalMinor"
+              ],
+              "default": "createdAt"
+            },
+            "description": ""
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": ""
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "4. Create an order once (safe to retry)",
+        "operationId": "post__api_orders",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "200": {
+            "description": "Existing order replayed (no second order)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Copy attemptId and operationKey from step 3; copy productId and price from step 2. Do not send total, price overrides, user IDs, currency, or status. First commit returns 201; exact replays return 200 with the original order. Different content on a committed key returns IDEMPOTENCY_CONFLICT. PRICE_CHANGED requires reviewing returned prices and correcting the draft. A deleted order is replayed with deletedAt set, never recreated.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderInput"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "operationKey returned by prepare. Keep unchanged for every retry of this attempt."
+          },
+          {
+            "$ref": "#/components/parameters/AppHeader"
+          }
+        ]
+      }
+    },
+    "/api/orders/{id}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get a visible order",
+        "operationId": "get__api_orders_id",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "order": {
+                      "$ref": "#/components/schemas/Order"
+                    }
+                  },
+                  "required": [
+                    "order"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Admin: soft-delete an order",
+        "operationId": "delete__api_orders_id",
+        "responses": {
+          "204": {
+            "description": "Success, no response body"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Admin only. Preserves the record and operation key; removes it from normal list/get responses. Does not recreate on retry.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AppHeader"
+          }
+        ]
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Admin: list agent accounts",
+        "operationId": "get__api_users",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Agent accounts only. Password hashes are never returned.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "default": 1
+            },
+            "description": ""
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "description": ""
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Admin: add an agent",
+        "operationId": "post__api_users",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Creates only an agent, never an admin. The agent must change the initial password before accessing business endpoints. Duplicate email returns 409.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAgentInput"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppHeader"
+          }
+        ]
+      }
+    },
+    "/api/users/{id}/deactivate": {
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Admin: deactivate an agent immediately",
+        "operationId": "patch__api_users_id_deactivate",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "required": [
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          }
+        },
+        "description": "Subsequent API calls from this account fail, including existing sessions. Admin accounts cannot be deactivated through this route. No body required.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AppHeader"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "sarh_session",
+        "description": "Set automatically by POST /api/auth/login. Use same-origin Swagger UI; do not manually paste this cookie."
+      }
+    },
+    "parameters": {
+      "AppHeader": {
+        "in": "header",
+        "name": "X-SARH-Request",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1"
+          ],
+          "default": "1"
+        },
+        "description": "CSRF application header; Swagger UI adds it automatically."
+      }
+    },
+    "schemas": {
+      "Id": {
+        "type": "string",
+        "pattern": "^[a-fA-F0-9]{24}$",
+        "example": "507f1f77bcf86cd799439011"
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "VALIDATION_ERROR"
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {}
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "agent"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "mustChangePassword": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "_id",
+          "name",
+          "email",
+          "role",
+          "active",
+          "mustChangePassword"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "unitPriceMinor": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000000,
+            "description": "Integer halalas: 12550 = SAR 125.50.",
+            "example": 12550
+          }
+        },
+        "required": [
+          "_id",
+          "sku",
+          "name",
+          "unitPriceMinor"
+        ]
+      },
+      "OrderItem": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "unitPriceMinor": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000000,
+            "description": "Integer halalas: 12550 = SAR 125.50.",
+            "example": 12550
+          }
+        },
+        "required": [
+          "productId",
+          "name",
+          "quantity",
+          "unitPriceMinor"
+        ]
+      },
+      "SubmissionItem": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "example": 2
+          },
+          "expectedUnitPriceMinor": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000000,
+            "description": "Integer halalas: 12550 = SAR 125.50.",
+            "example": 12550
+          }
+        },
+        "required": [
+          "productId",
+          "quantity",
+          "expectedUnitPriceMinor"
+        ],
+        "additionalProperties": false
+      },
+      "OrderSubmission": {
+        "type": "object",
+        "properties": {
+          "customerName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150,
+            "example": "Omar Hassan"
+          },
+          "customerEmail": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254,
+            "example": "omar@example.com"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubmissionItem"
+            },
+            "minItems": 1,
+            "maxItems": 5
+          }
+        },
+        "required": [
+          "customerName",
+          "customerEmail",
+          "items"
+        ],
+        "additionalProperties": false,
+        "description": "1–5 distinct product lines. Prices are checked against the catalog, totals calculated by the server. No client total is accepted."
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "createdBy": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerEmail": {
+            "type": "string",
+            "format": "email"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "completed",
+              "cancelled"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            },
+            "minItems": 1,
+            "maxItems": 5
+          },
+          "totalMinor": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Total in halalas."
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "SAR"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "_id",
+          "createdBy",
+          "customerName",
+          "customerEmail",
+          "status",
+          "items",
+          "totalMinor",
+          "currency",
+          "createdAt",
+          "deletedAt"
+        ]
+      },
+      "Attempt": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "operationKey": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "submitted",
+              "committed"
+            ]
+          },
+          "submission": {
+            "$ref": "#/components/schemas/OrderSubmission"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "_id",
+          "operationKey",
+          "state"
+        ]
+      },
+      "LoginInput": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "ChangePasswordInput": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ],
+        "additionalProperties": false
+      },
+      "CreateAgentInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "example": "New Agent"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 254,
+            "example": "new.agent@example.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128,
+            "example": "ChangeMe2026!"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "PrepareAttemptInput": {
+        "type": "object",
+        "properties": {
+          "previousAttemptId": {
+            "$ref": "#/components/schemas/Id"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateOrderInput": {
+        "type": "object",
+        "properties": {
+          "attemptId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "order": {
+            "$ref": "#/components/schemas/OrderSubmission"
+          }
+        },
+        "required": [
+          "attemptId",
+          "order"
+        ],
+        "additionalProperties": false
+      },
+      "CreateOrderResult": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "$ref": "#/components/schemas/Order"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "order",
+          "replayed"
+        ]
+      },
+      "OrderPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "totalPages": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "data",
+          "page",
+          "pageSize",
+          "total",
+          "totalPages"
+        ]
+      },
+      "UserPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "totalPages": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "data",
+          "page",
+          "pageSize",
+          "total",
+          "totalPages"
+        ]
+      }
+    },
+    "responses": {
+      "Error400": {
+        "description": "Invalid input, malformed JSON, unavailable product, or wrong current password.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error401": {
+        "description": "Missing, invalid, expired, revoked session, inactive user, or invalid credentials.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error403": {
+        "description": "Admin access required, first password change required, or CSRF/origin rejected.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error404": {
+        "description": "Resource or owned attempt not found.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error409": {
+        "description": "Conflict: changed price, reused key with different data, unresolved attempt, or duplicate email.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error415": {
+        "description": "Request body must use application/json.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error429": {
+        "description": "Too many authentication attempts. Retry after the indicated limit reset.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error503": {
+        "description": "Database connection is unavailable.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error500": {
+        "description": "Unexpected server or database error. Check the attempt status before retrying an order.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+}
