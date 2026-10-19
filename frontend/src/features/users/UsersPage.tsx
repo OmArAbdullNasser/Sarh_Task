@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { Plus, Users, UserRoundPlus, ShieldCheck } from 'lucide-react';
+import { Plus, Users, UserRoundPlus, UserRound, ShieldCheck } from 'lucide-react';
 import { api, jsonBody } from '../../api/client';
 import { useRemote } from '../../hooks/useRemote';
 import { useI18n } from '../../lib/i18n';
@@ -94,7 +94,9 @@ export function UsersPage() {
                     <tr key={user._id}>
                       <td>
                         <div className="customer-cell">
-                          <span className="avatar avatar-1">{user.name.slice(0, 1)}</span>
+                          <span className="avatar avatar-1">
+                            <UserRound size={16} aria-hidden="true" />
+                          </span>
                           <div>
                             <strong>{user.name}</strong>
                             <small>{t('agent')}</small>

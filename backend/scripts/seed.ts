@@ -7,6 +7,7 @@ import { Product } from '../src/modules/products/product.model.js';
 import { Order } from '../src/modules/orders/order.model.js';
 import { hashPassword } from '../src/lib/password.js';
 import { normalizeSearch } from '../src/lib/text.js';
+import { demoCustomer } from './demo-customers.js';
 
 if (env.NODE_ENV === 'production')
   throw new Error('Development seed is not allowed in production.');
@@ -27,7 +28,7 @@ async function seed() {
       { email: `${role}@sarh.local` },
       {
         $setOnInsert: {
-          name: role === 'admin' ? 'Demo Admin' : 'Demo Agent',
+          name: role === 'admin' ? 'عبدالله العتيبي' : 'خالد الدوسري',
           email: `${role}@sarh.local`,
           role,
           passwordHash,
@@ -78,37 +79,11 @@ async function seed() {
     );
   }
   const products = await Product.find({ active: true }).lean();
-  const firstNames = [
-    'Omar',
-    'Ahmed',
-    'Mohamed',
-    'Sara',
-    'Nour',
-    'Mariam',
-    'Khaled',
-    'Youssef',
-    'عمر',
-    'أحمد',
-    'سارة',
-    'مريم',
-  ];
-  const lastNames = [
-    'Hassan',
-    'Ali',
-    'Mostafa',
-    'Ibrahim',
-    'Farouk',
-    'Salem',
-    'حسن',
-    'علي',
-    'إبراهيم',
-  ];
   const statuses = ['pending', 'processing', 'completed', 'cancelled'] as const;
   for (let batch = 0; batch < 50; batch++) {
     const documents = Array.from({ length: 1000 }, (_, offset) => {
       const index = batch * 1000 + offset;
-      const customerName = `${pick(firstNames)} ${pick(lastNames)}`;
-      const customerEmail = `${pick(['omar', 'ahmed', 'sara', 'nour', 'customer'])}.${index}@example.com`;
+      const { customerName, customerEmail } = demoCustomer(index);
       const start = Math.floor(random() * products.length);
       const items = Array.from({ length: 1 + Math.floor(random() * 5) }, (_, position) => {
         const product = products[(start + position) % products.length];

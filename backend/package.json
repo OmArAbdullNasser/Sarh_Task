@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "seed": "tsx scripts/seed.ts",
     "test": "node --import tsx --test --test-concurrency=1 tests/integration.test.ts",
-    "proof:duplicates": "node --import tsx --test --test-name-pattern='parallel creates' tests/integration.test.ts"
+    "proof:duplicates": "node --import tsx --test --test-name-pattern='parallel creates' tests/integration.test.ts",
+    "demo:cleanup": "tsx scripts/clean-demo-data.ts"
   },
   "dependencies": {
     "cookie-parser": "1.4.7",

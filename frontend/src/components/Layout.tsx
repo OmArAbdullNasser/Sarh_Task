@@ -12,10 +12,12 @@ import {
   Menu,
   X,
   ChevronRight,
+  UserRound,
 } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthProvider';
 import { useI18n } from '../lib/i18n';
 import { ErrorNotice } from './Feedback';
+import { ThemeToggle } from './ThemeProvider';
 export function Brand() {
   const { t } = useI18n();
   return (
@@ -116,7 +118,9 @@ export function Layout() {
             {t('apiDocs')}
           </a>
           <div className="user-card">
-            <span className="avatar user-avatar">{user?.name.slice(0, 2).toUpperCase()}</span>
+            <span className="avatar user-avatar">
+              <UserRound size={17} aria-hidden="true" />
+            </span>
             <div>
               <strong>{user?.name}</strong>
               <small>{t(user?.role === 'admin' ? 'admin' : 'agent')}</small>
@@ -165,6 +169,7 @@ export function Layout() {
           </div>
           <div className="topbar-actions">
             <span className="timezone">{t('saudiTime')}</span>
+            <ThemeToggle />
             <LanguageToggle />
           </div>
         </header>

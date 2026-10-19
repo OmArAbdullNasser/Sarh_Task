@@ -1,6 +1,6 @@
 # SARH · Orders Console
 
-A local operations console built with **React + Vite + TypeScript** and **Express + Mongoose + MongoDB**. It supports Arabic/English, a 50,000-order seeded dataset, prefix search, numbered pagination, agent management, and retry-safe order creation.
+A local operations console built with **React + Vite + TypeScript** and **Express + Mongoose + MongoDB**. It supports Arabic/English, persistent dark/light display themes, a 50,000-order seeded dataset, prefix search, numbered pagination, agent management, and retry-safe order creation.
 
 - App: **http://localhost:5173**
 - Swagger playground: **http://localhost:4000/docs/**
@@ -25,7 +25,7 @@ npm run dev
 | Admin | `admin@sarh.local` | `SarhDemo2026!` |
 | Agent | `agent@sarh.local` | `SarhDemo2026!` |
 
-The login screen has buttons to fill these development accounts. Newly created agents must change their initial password before accessing the console. All money is integer halalas on the server and displayed as SAR; all dates are UTC instants displayed in `Asia/Riyadh`.
+The login screen has buttons to fill these development accounts. Dark mode is the default; the sun/moon control switches themes and remembers only that display preference. Seeded customer names are complete Arabic or English names, never mixed-script combinations. Newly created agents must change their initial password before accessing the console. All money is integer halalas on the server and displayed as SAR; all dates are UTC instants displayed in `Asia/Riyadh`.
 
 ## What to try
 

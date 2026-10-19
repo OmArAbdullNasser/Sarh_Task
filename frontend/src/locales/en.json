@@ -167,5 +167,7 @@
   "err_ATTEMPT_NOT_FOUND": "This save attempt could not be found. Check its status again.",
   "err_INVALID_TOTAL": "The order amount is outside the supported range.",
   "showingTeam": "Showing {from}–{to} of {total} team members",
-  "menu": "Open navigation"
+  "menu": "Open navigation",
+  "lightTheme": "Switch to light theme",
+  "darkTheme": "Switch to dark theme"
 }

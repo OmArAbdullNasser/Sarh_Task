@@ -169,3 +169,7 @@ Ten integration tests include OpenAPI schema validation and local Swagger assets
 The bilingual frontend, rapid-filter guard tests and browser check, three-decision `DECISIONS.md`, Senior `SCALE.md`, and three submission screenshots are now present; see the root README and submission/README.md. A screen recording and remote repository publication have not been done. No optional stats or optimistic creation, product-management UI, status editing, password-reset email, or distributed infrastructure has been added. This documents backend progress, not a completed assignment.
 
 References: [Express 5 error handling](https://expressjs.com/en/5x/guide/error-handling/), [Mongoose unique indexes vs validators](https://mongoosejs.com/docs/validation.html), [MongoDB partial indexes](https://www.mongodb.com/docs/manual/core/index-partial/).
+
+## Coherent demo customers
+
+New seeds use paired full names from `scripts/demo-customers.ts`, with matching synthetic email prefixes, rather than mixing first/surname scripts. Existing local fixtures can be previewed with `npm run demo:cleanup`, then updated with `npm run demo:cleanup -- --apply`. The script only supports development `sarh_orders`, targets known seeded email patterns and the exact UI smoke fixture, saves an ignored local name backup, and checks that order count/money are preserved. It never resets the orders collection or alters operation keys/fingerprints.

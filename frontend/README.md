@@ -20,3 +20,7 @@ Open **http://localhost:5173** with the backend running on port 4000. Vite proxi
 The picker currently loads the bounded catalog endpoint (20 seeded products, API maximum 50), then searches those locally. A larger catalog requires server-side autocomplete and pagination. Unsent fields do not survive navigation/refresh; fields that reached the backend can be restored. There is no background autosave or offline creation queue.
 
 Tests: three adversarial read-lifecycle cases (including three filters whose responses resolve in reverse order despite ignoring abort), and a create timeout/retry case asserting identical payload/key and no new attempt until success is known. Backend integration tests cover actual database concurrency, pricing, authorization and recovery. Browser review complements these tests; it does not replace them.
+
+## Display theme
+
+`ThemeProvider` defaults to dark and stores only `sarh-theme` (`dark`/`light`) in localStorage. Theme controls are available in the app header and login screen. This is a non-sensitive display preference; tokens, passwords, and order drafts remain outside browser storage. Dark color overrides cover tables, forms, dialogs, picker menus, feedback and login. Customer/account avatars use a neutral user icon rather than a standalone initial.

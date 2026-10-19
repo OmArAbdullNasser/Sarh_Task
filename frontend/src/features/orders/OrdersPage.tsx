@@ -11,6 +11,7 @@ import {
   ListFilter,
   LayoutList,
   Clock3,
+  UserRound,
   X,
 } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
@@ -250,7 +251,7 @@ export function OrdersPage() {
                       <td>
                         <div className="customer-cell">
                           <span className={`avatar avatar-${order.customerName.charCodeAt(0) % 4}`}>
-                            {order.customerName.slice(0, 1)}
+                            <UserRound size={16} aria-hidden="true" />
                           </span>
                           <div>
                             <strong>{order.customerName}</strong>

@@ -13,6 +13,7 @@ import { useAuth } from './AuthProvider';
 import { useI18n } from '../../lib/i18n';
 import { Brand, LanguageToggle } from '../../components/Layout';
 import { ErrorNotice } from '../../components/Feedback';
+import { ThemeToggle } from '../../components/ThemeProvider';
 
 export function LoginPage() {
   const { user, login } = useAuth();
@@ -87,6 +88,7 @@ export function LoginPage() {
       </section>
       <section className="login-form-side">
         <div className="login-language">
+          <ThemeToggle />
           <LanguageToggle />
         </div>
         <form className="login-form" onSubmit={submit}>
