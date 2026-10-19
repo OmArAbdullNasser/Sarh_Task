@@ -1,0 +1,12 @@
+
+> sarh-frontend@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 /Users/omar/Desktop/SARH_Orders_Console/frontend
+
+
+ Test Files  2 passed (2)
+      Tests  4 passed (4)
+   Start at  19:39:57
+   Duration  986ms (environment 64%, tests 15%, setup 11%, import 7%, transform 2%)

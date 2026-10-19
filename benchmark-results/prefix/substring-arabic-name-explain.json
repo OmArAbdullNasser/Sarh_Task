@@ -1,0 +1,1033 @@
+{
+  "list": {
+    "explainVersion": "1",
+    "queryPlanner": {
+      "namespace": "sarh_search_benchmark.orders",
+      "parsedQuery": {
+        "$and": [
+          {
+            "$or": [
+              {
+                "customerEmail": {
+                  "$regex": "أحم",
+                  "$options": "i"
+                }
+              },
+              {
+                "customerName": {
+                  "$regex": "أحم",
+                  "$options": "i"
+                }
+              }
+            ]
+          },
+          {
+            "deletedAt": {
+              "$eq": null
+            }
+          }
+        ]
+      },
+      "indexFilterSet": false,
+      "queryHash": "47372965",
+      "planCacheShapeHash": "47372965",
+      "planCacheKey": "96B33B63",
+      "optimizationTimeMillis": 3,
+      "maxIndexedOrSolutionsReached": false,
+      "maxIndexedAndSolutionsReached": false,
+      "maxScansToExplodeReached": false,
+      "prunedSimilarIndexes": false,
+      "winningPlan": {
+        "isCached": true,
+        "stage": "LIMIT",
+        "limitAmount": 50,
+        "inputStage": {
+          "stage": "PROJECTION_SIMPLE",
+          "transformBy": {
+            "items": 0,
+            "customerNameSearch": 0,
+            "customerEmailSearch": 0
+          },
+          "inputStage": {
+            "stage": "FETCH",
+            "filter": {
+              "$and": [
+                {
+                  "deletedAt": {
+                    "$eq": null
+                  }
+                },
+                {
+                  "$or": [
+                    {
+                      "customerEmail": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    },
+                    {
+                      "customerName": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "inputStage": {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "deletedAt": 1,
+                "createdAt": -1,
+                "_id": -1
+              },
+              "indexName": "deletedAt_1_createdAt_-1__id_-1",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "deletedAt": [],
+                "createdAt": [],
+                "_id": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "deletedAt": [
+                  "[null, null]"
+                ],
+                "createdAt": [
+                  "[MaxKey, MinKey]"
+                ],
+                "_id": [
+                  "[MaxKey, MinKey]"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "rejectedPlans": [
+        {
+          "isCached": false,
+          "stage": "PROJECTION_SIMPLE",
+          "transformBy": {
+            "items": 0,
+            "customerNameSearch": 0,
+            "customerEmailSearch": 0
+          },
+          "inputStage": {
+            "stage": "SORT",
+            "sortPattern": {
+              "createdAt": -1,
+              "_id": -1
+            },
+            "memLimit": 104857600,
+            "limitAmount": 50,
+            "type": "simple",
+            "inputStage": {
+              "stage": "FETCH",
+              "filter": {
+                "$and": [
+                  {
+                    "deletedAt": {
+                      "$eq": null
+                    }
+                  },
+                  {
+                    "$or": [
+                      {
+                        "customerEmail": {
+                          "$regex": "أحم",
+                          "$options": "i"
+                        }
+                      },
+                      {
+                        "customerName": {
+                          "$regex": "أحم",
+                          "$options": "i"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "deletedAt": 1,
+                  "status": 1,
+                  "createdAt": -1,
+                  "_id": -1
+                },
+                "indexName": "deletedAt_1_status_1_createdAt_-1__id_-1",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "deletedAt": [],
+                  "status": [],
+                  "createdAt": [],
+                  "_id": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "deletedAt": [
+                    "[null, null]"
+                  ],
+                  "status": [
+                    "[MinKey, MaxKey]"
+                  ],
+                  "createdAt": [
+                    "[MaxKey, MinKey]"
+                  ],
+                  "_id": [
+                    "[MaxKey, MinKey]"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "isCached": false,
+          "stage": "PROJECTION_SIMPLE",
+          "transformBy": {
+            "items": 0,
+            "customerNameSearch": 0,
+            "customerEmailSearch": 0
+          },
+          "inputStage": {
+            "stage": "SORT",
+            "sortPattern": {
+              "createdAt": -1,
+              "_id": -1
+            },
+            "memLimit": 104857600,
+            "limitAmount": 50,
+            "type": "simple",
+            "inputStage": {
+              "stage": "FETCH",
+              "filter": {
+                "$and": [
+                  {
+                    "deletedAt": {
+                      "$eq": null
+                    }
+                  },
+                  {
+                    "$or": [
+                      {
+                        "customerEmail": {
+                          "$regex": "أحم",
+                          "$options": "i"
+                        }
+                      },
+                      {
+                        "customerName": {
+                          "$regex": "أحم",
+                          "$options": "i"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "deletedAt": 1,
+                  "totalMinor": -1,
+                  "_id": -1
+                },
+                "indexName": "deletedAt_1_totalMinor_-1__id_-1",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "deletedAt": [],
+                  "totalMinor": [],
+                  "_id": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "deletedAt": [
+                    "[null, null]"
+                  ],
+                  "totalMinor": [
+                    "[MaxKey, MinKey]"
+                  ],
+                  "_id": [
+                    "[MaxKey, MinKey]"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "isCached": false,
+          "stage": "PROJECTION_SIMPLE",
+          "transformBy": {
+            "items": 0,
+            "customerNameSearch": 0,
+            "customerEmailSearch": 0
+          },
+          "inputStage": {
+            "stage": "SORT",
+            "sortPattern": {
+              "createdAt": -1,
+              "_id": -1
+            },
+            "memLimit": 104857600,
+            "limitAmount": 50,
+            "type": "simple",
+            "inputStage": {
+              "stage": "FETCH",
+              "filter": {
+                "$and": [
+                  {
+                    "deletedAt": {
+                      "$eq": null
+                    }
+                  },
+                  {
+                    "$or": [
+                      {
+                        "customerEmail": {
+                          "$regex": "أحم",
+                          "$options": "i"
+                        }
+                      },
+                      {
+                        "customerName": {
+                          "$regex": "أحم",
+                          "$options": "i"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "deletedAt": 1,
+                  "status": 1,
+                  "totalMinor": -1,
+                  "_id": -1
+                },
+                "indexName": "deletedAt_1_status_1_totalMinor_-1__id_-1",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "deletedAt": [],
+                  "status": [],
+                  "totalMinor": [],
+                  "_id": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "deletedAt": [
+                    "[null, null]"
+                  ],
+                  "status": [
+                    "[MinKey, MaxKey]"
+                  ],
+                  "totalMinor": [
+                    "[MaxKey, MinKey]"
+                  ],
+                  "_id": [
+                    "[MaxKey, MinKey]"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "executionStats": {
+      "executionSuccess": true,
+      "nReturned": 50,
+      "executionTimeMillis": 3,
+      "totalKeysExamined": 607,
+      "totalDocsExamined": 607,
+      "executionStages": {
+        "isCached": true,
+        "stage": "LIMIT",
+        "nReturned": 50,
+        "executionTimeMillisEstimate": 0,
+        "works": 608,
+        "advanced": 50,
+        "needTime": 557,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "limitAmount": 50,
+        "inputStage": {
+          "stage": "PROJECTION_SIMPLE",
+          "nReturned": 50,
+          "executionTimeMillisEstimate": 0,
+          "works": 607,
+          "advanced": 50,
+          "needTime": 557,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "transformBy": {
+            "items": 0,
+            "customerNameSearch": 0,
+            "customerEmailSearch": 0
+          },
+          "inputStage": {
+            "stage": "FETCH",
+            "filter": {
+              "$and": [
+                {
+                  "deletedAt": {
+                    "$eq": null
+                  }
+                },
+                {
+                  "$or": [
+                    {
+                      "customerEmail": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    },
+                    {
+                      "customerName": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "nReturned": 50,
+            "executionTimeMillisEstimate": 0,
+            "works": 607,
+            "advanced": 50,
+            "needTime": 557,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "docsExamined": 607,
+            "alreadyHasObj": 0,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 607,
+              "executionTimeMillisEstimate": 0,
+              "works": 607,
+              "advanced": 607,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 0,
+              "keyPattern": {
+                "deletedAt": 1,
+                "createdAt": -1,
+                "_id": -1
+              },
+              "indexName": "deletedAt_1_createdAt_-1__id_-1",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "deletedAt": [],
+                "createdAt": [],
+                "_id": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "deletedAt": [
+                  "[null, null]"
+                ],
+                "createdAt": [
+                  "[MaxKey, MinKey]"
+                ],
+                "_id": [
+                  "[MaxKey, MinKey]"
+                ]
+              },
+              "keysExamined": 607,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          }
+        }
+      }
+    },
+    "queryShapeHash": "5B46FE59D4658BCCEF5F0B7684B33109F616437887C34EDD15F13C8850800A20",
+    "command": {
+      "find": "orders",
+      "filter": {
+        "deletedAt": null,
+        "$or": [
+          {
+            "customerName": {
+              "$regex": "أحم",
+              "$options": "i"
+            }
+          },
+          {
+            "customerEmail": {
+              "$regex": "أحم",
+              "$options": "i"
+            }
+          }
+        ]
+      },
+      "sort": {
+        "createdAt": -1,
+        "_id": -1
+      },
+      "projection": {
+        "items": 0,
+        "customerNameSearch": 0,
+        "customerEmailSearch": 0
+      },
+      "skip": 0,
+      "limit": 50,
+      "$db": "sarh_search_benchmark"
+    },
+    "serverInfo": {
+      "host": "2f119b942309",
+      "port": 27017,
+      "version": "8.0.34",
+      "gitVersion": "51db4515a6597aedcf6188ee4e48a27e65b065ae"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+      "internalQueryFrameworkControl": "trySbeRestricted",
+      "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+    },
+    "ok": 1
+  },
+  "count": {
+    "explainVersion": "2",
+    "stages": [
+      {
+        "$cursor": {
+          "queryPlanner": {
+            "namespace": "sarh_search_benchmark.orders",
+            "parsedQuery": {
+              "$and": [
+                {
+                  "$or": [
+                    {
+                      "customerEmail": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    },
+                    {
+                      "customerName": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "deletedAt": {
+                    "$eq": null
+                  }
+                }
+              ]
+            },
+            "indexFilterSet": false,
+            "queryHash": "61A8F543",
+            "planCacheShapeHash": "61A8F543",
+            "planCacheKey": "9AD7C502",
+            "optimizationTimeMillis": 5,
+            "maxIndexedOrSolutionsReached": false,
+            "maxIndexedAndSolutionsReached": false,
+            "maxScansToExplodeReached": false,
+            "prunedSimilarIndexes": false,
+            "winningPlan": {
+              "isCached": false,
+              "queryPlan": {
+                "stage": "GROUP",
+                "planNodeId": 3,
+                "inputStage": {
+                  "stage": "FETCH",
+                  "planNodeId": 2,
+                  "filter": {
+                    "$or": [
+                      {
+                        "customerEmail": {
+                          "$regex": "أحم",
+                          "$options": "i"
+                        }
+                      },
+                      {
+                        "customerName": {
+                          "$regex": "أحم",
+                          "$options": "i"
+                        }
+                      }
+                    ]
+                  },
+                  "inputStage": {
+                    "stage": "IXSCAN",
+                    "planNodeId": 1,
+                    "keyPattern": {
+                      "deletedAt": 1,
+                      "createdAt": -1,
+                      "_id": -1
+                    },
+                    "indexName": "deletedAt_1_createdAt_-1__id_-1",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                      "deletedAt": [],
+                      "createdAt": [],
+                      "_id": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                      "deletedAt": [
+                        "[null, null]"
+                      ],
+                      "createdAt": [
+                        "[MaxKey, MinKey]"
+                      ],
+                      "_id": [
+                        "[MaxKey, MinKey]"
+                      ]
+                    }
+                  }
+                }
+              },
+              "slotBasedPlan": {
+                "slots": "$$RESULT=s14 env: { s5 = {\"deletedAt\" : 1, \"createdAt\" : -1, \"_id\" : -1} }",
+                "stages": "[3] project [s14 = newObj(\"_id\", s12, \"total\", s13)] \n[3] project [s12 = null, s13 = (convert ( s11, int32) ?: s11)] \n[3] group [] [s11 = count()] spillSlots[s10] mergingExprs[sum(s10)] \n[2] filter {(traverseF(s8, lambda(l3.0) { (((l3.0 == /أحم/i) ?: false) || (regexMatch(PcreRegex(/أحم/i), l3.0) ?: false)) }, false) || traverseF(s9, lambda(l4.0) { (((l4.0 == /أحم/i) ?: false) || (regexMatch(PcreRegex(/أحم/i), l4.0) ?: false)) }, false))} \n[2] nlj inner [] [s1, s2, s3, s4, s5] \n    left \n        [1] ixseek KS(140F0F0104) KS(14F5F5FE04) s4 s1 s2 s3 [] @\"1ccfa2da-2c5d-456e-9db8-d269f01cd80c\" @\"deletedAt_1_createdAt_-1__id_-1\" true \n    right \n        [2] limit 1ll \n        [2] seek s1 s6 s7 s2 s3 s4 s5 none none [s8 = customerEmail, s9 = customerName] @\"1ccfa2da-2c5d-456e-9db8-d269f01cd80c\" true false \n"
+              }
+            },
+            "rejectedPlans": [
+              {
+                "isCached": false,
+                "stage": "FETCH",
+                "filter": {
+                  "$or": [
+                    {
+                      "customerEmail": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    },
+                    {
+                      "customerName": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    }
+                  ]
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "deletedAt": 1,
+                    "status": 1,
+                    "createdAt": -1,
+                    "_id": -1
+                  },
+                  "indexName": "deletedAt_1_status_1_createdAt_-1__id_-1",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "deletedAt": [],
+                    "status": [],
+                    "createdAt": [],
+                    "_id": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "deletedAt": [
+                      "[null, null]"
+                    ],
+                    "status": [
+                      "[MinKey, MaxKey]"
+                    ],
+                    "createdAt": [
+                      "[MaxKey, MinKey]"
+                    ],
+                    "_id": [
+                      "[MaxKey, MinKey]"
+                    ]
+                  }
+                }
+              },
+              {
+                "isCached": true,
+                "stage": "FETCH",
+                "filter": {
+                  "$or": [
+                    {
+                      "customerEmail": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    },
+                    {
+                      "customerName": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    }
+                  ]
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "deletedAt": 1,
+                    "totalMinor": -1,
+                    "_id": -1
+                  },
+                  "indexName": "deletedAt_1_totalMinor_-1__id_-1",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "deletedAt": [],
+                    "totalMinor": [],
+                    "_id": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "deletedAt": [
+                      "[null, null]"
+                    ],
+                    "totalMinor": [
+                      "[MaxKey, MinKey]"
+                    ],
+                    "_id": [
+                      "[MaxKey, MinKey]"
+                    ]
+                  }
+                }
+              },
+              {
+                "isCached": false,
+                "stage": "FETCH",
+                "filter": {
+                  "$or": [
+                    {
+                      "customerEmail": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    },
+                    {
+                      "customerName": {
+                        "$regex": "أحم",
+                        "$options": "i"
+                      }
+                    }
+                  ]
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "deletedAt": 1,
+                    "status": 1,
+                    "totalMinor": -1,
+                    "_id": -1
+                  },
+                  "indexName": "deletedAt_1_status_1_totalMinor_-1__id_-1",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "deletedAt": [],
+                    "status": [],
+                    "totalMinor": [],
+                    "_id": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "deletedAt": [
+                      "[null, null]"
+                    ],
+                    "status": [
+                      "[MinKey, MaxKey]"
+                    ],
+                    "totalMinor": [
+                      "[MaxKey, MinKey]"
+                    ],
+                    "_id": [
+                      "[MaxKey, MinKey]"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "executionStats": {
+            "executionSuccess": true,
+            "nReturned": 1,
+            "executionTimeMillis": 50,
+            "totalKeysExamined": 47514,
+            "totalDocsExamined": 47514,
+            "executionStages": {
+              "stage": "project",
+              "planNodeId": 3,
+              "nReturned": 1,
+              "executionTimeMillisEstimate": 34,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 4,
+              "restoreState": 4,
+              "isEOF": 1,
+              "projections": {
+                "14": "newObj(\"_id\", s12, \"total\", s13) "
+              },
+              "inputStage": {
+                "stage": "project",
+                "planNodeId": 3,
+                "nReturned": 1,
+                "executionTimeMillisEstimate": 34,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 4,
+                "restoreState": 4,
+                "isEOF": 1,
+                "projections": {
+                  "12": "null ",
+                  "13": "(convert ( s11, int32) ?: s11) "
+                },
+                "inputStage": {
+                  "stage": "group",
+                  "planNodeId": 3,
+                  "nReturned": 1,
+                  "executionTimeMillisEstimate": 34,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 4,
+                  "restoreState": 4,
+                  "isEOF": 1,
+                  "groupBySlots": [],
+                  "expressions": {
+                    "11": "count() ",
+                    "initExprs": {
+                      "11": null
+                    }
+                  },
+                  "mergingExprs": {
+                    "10": "sum(s10) "
+                  },
+                  "usedDisk": false,
+                  "spills": 0,
+                  "spilledBytes": 0,
+                  "spilledRecords": 0,
+                  "spilledDataStorageSize": 0,
+                  "inputStage": {
+                    "stage": "filter",
+                    "planNodeId": 2,
+                    "nReturned": 3944,
+                    "executionTimeMillisEstimate": 34,
+                    "opens": 1,
+                    "closes": 1,
+                    "saveState": 4,
+                    "restoreState": 4,
+                    "isEOF": 1,
+                    "numTested": 47514,
+                    "filter": "(traverseF(s8, lambda(l3.0) { (((l3.0 == /أحم/i) ?: false) || (regexMatch(PcreRegex(/أحم/i), l3.0) ?: false)) }, false) || traverseF(s9, lambda(l4.0) { (((l4.0 == /أحم/i) ?: false) || (regexMatch(PcreRegex(/أحم/i), l4.0) ?: false)) }, false)) ",
+                    "inputStage": {
+                      "stage": "nlj",
+                      "planNodeId": 2,
+                      "nReturned": 47514,
+                      "executionTimeMillisEstimate": 13,
+                      "opens": 1,
+                      "closes": 1,
+                      "saveState": 4,
+                      "restoreState": 4,
+                      "isEOF": 1,
+                      "totalDocsExamined": 47514,
+                      "totalKeysExamined": 47514,
+                      "collectionScans": 0,
+                      "collectionSeeks": 47514,
+                      "indexScans": 0,
+                      "indexSeeks": 1,
+                      "indexesUsed": [
+                        "deletedAt_1_createdAt_-1__id_-1"
+                      ],
+                      "innerOpens": 47514,
+                      "innerCloses": 1,
+                      "outerProjects": [],
+                      "outerCorrelated": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                      ],
+                      "outerStage": {
+                        "stage": "ixseek",
+                        "planNodeId": 1,
+                        "nReturned": 47514,
+                        "executionTimeMillisEstimate": 0,
+                        "opens": 1,
+                        "closes": 1,
+                        "saveState": 4,
+                        "restoreState": 4,
+                        "isEOF": 1,
+                        "indexName": "deletedAt_1_createdAt_-1__id_-1",
+                        "keysExamined": 47514,
+                        "seeks": 1,
+                        "numReads": 47515,
+                        "indexKeySlot": 4,
+                        "recordIdSlot": 1,
+                        "snapshotIdSlot": 2,
+                        "indexIdentSlot": 3,
+                        "outputSlots": [],
+                        "indexKeysToInclude": "00000000000000000000000000000000",
+                        "seekKeyLow": "KS(140F0F0104) ",
+                        "seekKeyHigh": "KS(14F5F5FE04) "
+                      },
+                      "innerStage": {
+                        "stage": "limit",
+                        "planNodeId": 2,
+                        "nReturned": 47514,
+                        "executionTimeMillisEstimate": 13,
+                        "opens": 47514,
+                        "closes": 1,
+                        "saveState": 4,
+                        "restoreState": 4,
+                        "isEOF": 1,
+                        "limit": 1,
+                        "inputStage": {
+                          "stage": "seek",
+                          "planNodeId": 2,
+                          "nReturned": 47514,
+                          "executionTimeMillisEstimate": 13,
+                          "opens": 47514,
+                          "closes": 1,
+                          "saveState": 4,
+                          "restoreState": 4,
+                          "isEOF": 0,
+                          "numReads": 47514,
+                          "recordSlot": 6,
+                          "recordIdSlot": 7,
+                          "seekRecordIdSlot": 1,
+                          "snapshotIdSlot": 2,
+                          "indexIdentSlot": 3,
+                          "indexKeySlot": 4,
+                          "indexKeyPatternSlot": 5,
+                          "scanFieldNames": [
+                            "customerEmail",
+                            "customerName"
+                          ],
+                          "scanFieldSlots": [
+                            8,
+                            9
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 37
+      },
+      {
+        "$project": {
+          "total": true,
+          "_id": false
+        },
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 37
+      }
+    ],
+    "queryShapeHash": "6C17C155F559D7E0EA96D76DE245E654F1351ED9625A309FFC72EE0863759C4F",
+    "serverInfo": {
+      "host": "2f119b942309",
+      "port": 27017,
+      "version": "8.0.34",
+      "gitVersion": "51db4515a6597aedcf6188ee4e48a27e65b065ae"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+      "internalQueryFrameworkControl": "trySbeRestricted",
+      "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+    },
+    "command": {
+      "aggregate": "orders",
+      "pipeline": [
+        {
+          "$match": {
+            "deletedAt": null,
+            "$or": [
+              {
+                "customerName": {
+                  "$regex": "أحم",
+                  "$options": "i"
+                }
+              },
+              {
+                "customerEmail": {
+                  "$regex": "أحم",
+                  "$options": "i"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "$count": "total"
+        }
+      ],
+      "cursor": {},
+      "$db": "sarh_search_benchmark"
+    },
+    "ok": 1
+  }
+}

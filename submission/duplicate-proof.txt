@@ -1,0 +1,14 @@
+
+> sarh-backend@0.1.0 proof:duplicates
+> node --import tsx --test --test-name-pattern='parallel creates' tests/integration.test.ts
+
+Duplicate proof: 8 parallel HTTP requests => 1 order (6ad647dda05c92b6aab43ada), total=37650 halalas
+✔ parallel creates, lost response replay, conflict, and soft-delete leave exactly one order (373.424791ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1000.872709

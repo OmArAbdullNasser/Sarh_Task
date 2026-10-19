@@ -1,0 +1,281 @@
+{
+  "generatedAt": "2026-10-19T15:38:18.871Z",
+  "node": "v24.21.0",
+  "mongo": "8.0.34",
+  "host": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpus": 10
+  },
+  "count": 50000,
+  "pageSize": 50,
+  "warmup": 1,
+  "samples": 10,
+  "concurrentRequests": 8,
+  "notes": "Direct driver, list and exact count together; warm cache; synthetic data; not HTTP or production load. Indexes support filters and sorts, not arbitrary substring search.",
+  "indexes": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_"
+    },
+    {
+      "v": 2,
+      "key": {
+        "deletedAt": 1,
+        "createdAt": -1,
+        "_id": -1
+      },
+      "name": "deletedAt_1_createdAt_-1__id_-1"
+    },
+    {
+      "v": 2,
+      "key": {
+        "deletedAt": 1,
+        "status": 1,
+        "createdAt": -1,
+        "_id": -1
+      },
+      "name": "deletedAt_1_status_1_createdAt_-1__id_-1"
+    },
+    {
+      "v": 2,
+      "key": {
+        "deletedAt": 1,
+        "totalMinor": -1,
+        "_id": -1
+      },
+      "name": "deletedAt_1_totalMinor_-1__id_-1"
+    },
+    {
+      "v": 2,
+      "key": {
+        "deletedAt": 1,
+        "status": 1,
+        "totalMinor": -1,
+        "_id": -1
+      },
+      "name": "deletedAt_1_status_1_totalMinor_-1__id_-1"
+    }
+  ],
+  "rows": [
+    {
+      "phase": "baseline",
+      "scenario": "default-page-1",
+      "total": 47514,
+      "returned": 50,
+      "medianMs": 21.06,
+      "p95Ms": 22.89,
+      "concurrent8MaxMs": 159.56,
+      "concurrencyWallMs": 160.44,
+      "listDocsExamined": 50000,
+      "listKeysExamined": 0
+    },
+    {
+      "phase": "baseline",
+      "scenario": "default-page-900",
+      "total": 47514,
+      "returned": 50,
+      "medianMs": 49.22,
+      "p95Ms": 59.27,
+      "concurrent8MaxMs": 353.48,
+      "concurrencyWallMs": 354.05,
+      "listDocsExamined": 50000,
+      "listKeysExamined": 0
+    },
+    {
+      "phase": "baseline",
+      "scenario": "status-date",
+      "total": 12012,
+      "returned": 50,
+      "medianMs": 19.95,
+      "p95Ms": 20.61,
+      "concurrent8MaxMs": 236.23,
+      "concurrencyWallMs": 236.76,
+      "listDocsExamined": 50000,
+      "listKeysExamined": 0
+    },
+    {
+      "phase": "baseline",
+      "scenario": "common-name",
+      "total": 16634,
+      "returned": 50,
+      "medianMs": 45.33,
+      "p95Ms": 74.15,
+      "concurrent8MaxMs": 963.76,
+      "concurrencyWallMs": 964,
+      "listDocsExamined": 50000,
+      "listKeysExamined": 0
+    },
+    {
+      "phase": "baseline",
+      "scenario": "email-middle",
+      "total": 475,
+      "returned": 50,
+      "medianMs": 44.85,
+      "p95Ms": 65.68,
+      "concurrent8MaxMs": 1252.44,
+      "concurrencyWallMs": 1252.95,
+      "listDocsExamined": 50000,
+      "listKeysExamined": 0
+    },
+    {
+      "phase": "baseline",
+      "scenario": "arabic-name",
+      "total": 3944,
+      "returned": 50,
+      "medianMs": 52.23,
+      "p95Ms": 98.52,
+      "concurrent8MaxMs": 1414.18,
+      "concurrencyWallMs": 1414.43,
+      "listDocsExamined": 50000,
+      "listKeysExamined": 0
+    },
+    {
+      "phase": "baseline",
+      "scenario": "missing-result",
+      "total": 0,
+      "returned": 0,
+      "medianMs": 54.79,
+      "p95Ms": 86.66,
+      "concurrent8MaxMs": 1209.93,
+      "concurrencyWallMs": 1210.45,
+      "listDocsExamined": 50000,
+      "listKeysExamined": 0
+    },
+    {
+      "phase": "baseline",
+      "scenario": "search-status-amount",
+      "total": 7103,
+      "returned": 50,
+      "medianMs": 42.67,
+      "p95Ms": 44.27,
+      "concurrent8MaxMs": 950.25,
+      "concurrencyWallMs": 951.39,
+      "listDocsExamined": 50000,
+      "listKeysExamined": 0
+    },
+    {
+      "phase": "baseline",
+      "scenario": "common-email-page-500",
+      "total": 47514,
+      "returned": 50,
+      "medianMs": 58.4,
+      "p95Ms": 61.17,
+      "concurrent8MaxMs": 628.55,
+      "concurrencyWallMs": 629.41,
+      "listDocsExamined": 50000,
+      "listKeysExamined": 0
+    },
+    {
+      "phase": "indexed",
+      "scenario": "default-page-1",
+      "total": 47514,
+      "returned": 50,
+      "medianMs": 6.55,
+      "p95Ms": 6.93,
+      "concurrent8MaxMs": 14.64,
+      "concurrencyWallMs": 15.7,
+      "listDocsExamined": 50,
+      "listKeysExamined": 50
+    },
+    {
+      "phase": "indexed",
+      "scenario": "default-page-900",
+      "total": 47514,
+      "returned": 50,
+      "medianMs": 84.24,
+      "p95Ms": 91.14,
+      "concurrent8MaxMs": 144.69,
+      "concurrencyWallMs": 145.05,
+      "listDocsExamined": 45000,
+      "listKeysExamined": 45000
+    },
+    {
+      "phase": "indexed",
+      "scenario": "status-date",
+      "total": 12012,
+      "returned": 50,
+      "medianMs": 2.52,
+      "p95Ms": 3.14,
+      "concurrent8MaxMs": 7.01,
+      "concurrencyWallMs": 7.16,
+      "listDocsExamined": 50,
+      "listKeysExamined": 50
+    },
+    {
+      "phase": "indexed",
+      "scenario": "common-name",
+      "total": 16634,
+      "returned": 50,
+      "medianMs": 39.74,
+      "p95Ms": 48.54,
+      "concurrent8MaxMs": 411.91,
+      "concurrencyWallMs": 412.05,
+      "listDocsExamined": 164,
+      "listKeysExamined": 164
+    },
+    {
+      "phase": "indexed",
+      "scenario": "email-middle",
+      "total": 475,
+      "returned": 50,
+      "medianMs": 48.48,
+      "p95Ms": 105.59,
+      "concurrent8MaxMs": 516.21,
+      "concurrencyWallMs": 516.33,
+      "listDocsExamined": 5312,
+      "listKeysExamined": 5312
+    },
+    {
+      "phase": "indexed",
+      "scenario": "arabic-name",
+      "total": 3944,
+      "returned": 50,
+      "medianMs": 42.76,
+      "p95Ms": 44.34,
+      "concurrent8MaxMs": 437.98,
+      "concurrencyWallMs": 438.5,
+      "listDocsExamined": 607,
+      "listKeysExamined": 607
+    },
+    {
+      "phase": "indexed",
+      "scenario": "missing-result",
+      "total": 0,
+      "returned": 0,
+      "medianMs": 60.04,
+      "p95Ms": 61.97,
+      "concurrent8MaxMs": 1214.06,
+      "concurrencyWallMs": 1214.43,
+      "listDocsExamined": 47514,
+      "listKeysExamined": 47514
+    },
+    {
+      "phase": "indexed",
+      "scenario": "search-status-amount",
+      "total": 7103,
+      "returned": 50,
+      "medianMs": 10.19,
+      "p95Ms": 10.58,
+      "concurrent8MaxMs": 92.47,
+      "concurrencyWallMs": 92.48,
+      "listDocsExamined": 86,
+      "listKeysExamined": 86
+    },
+    {
+      "phase": "indexed",
+      "scenario": "common-email-page-500",
+      "total": 47514,
+      "returned": 50,
+      "medianMs": 39.33,
+      "p95Ms": 40.95,
+      "concurrent8MaxMs": 447.88,
+      "concurrencyWallMs": 448.16,
+      "listDocsExamined": 25000,
+      "listKeysExamined": 25000
+    }
+  ]
+}

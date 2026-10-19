@@ -1,0 +1,499 @@
+{
+  "list": {
+    "explainVersion": "1",
+    "queryPlanner": {
+      "namespace": "sarh_search_benchmark.orders",
+      "parsedQuery": {
+        "$and": [
+          {
+            "$or": [
+              {
+                "customerEmail": {
+                  "$regex": "ar",
+                  "$options": "i"
+                }
+              },
+              {
+                "customerName": {
+                  "$regex": "ar",
+                  "$options": "i"
+                }
+              }
+            ]
+          },
+          {
+            "deletedAt": {
+              "$eq": null
+            }
+          },
+          {
+            "status": {
+              "$eq": "completed"
+            }
+          }
+        ]
+      },
+      "indexFilterSet": false,
+      "queryHash": "07A675C6",
+      "planCacheShapeHash": "07A675C6",
+      "planCacheKey": "655A38F6",
+      "optimizationTimeMillis": 0,
+      "maxIndexedOrSolutionsReached": false,
+      "maxIndexedAndSolutionsReached": false,
+      "maxScansToExplodeReached": false,
+      "prunedSimilarIndexes": false,
+      "winningPlan": {
+        "isCached": false,
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "items": 0
+        },
+        "inputStage": {
+          "stage": "SORT",
+          "sortPattern": {
+            "totalMinor": -1,
+            "_id": -1
+          },
+          "memLimit": 104857600,
+          "limitAmount": 50,
+          "type": "simple",
+          "inputStage": {
+            "stage": "COLLSCAN",
+            "filter": {
+              "$and": [
+                {
+                  "$or": [
+                    {
+                      "customerEmail": {
+                        "$regex": "ar",
+                        "$options": "i"
+                      }
+                    },
+                    {
+                      "customerName": {
+                        "$regex": "ar",
+                        "$options": "i"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "deletedAt": {
+                    "$eq": null
+                  }
+                },
+                {
+                  "status": {
+                    "$eq": "completed"
+                  }
+                }
+              ]
+            },
+            "direction": "forward"
+          }
+        }
+      },
+      "rejectedPlans": []
+    },
+    "executionStats": {
+      "executionSuccess": true,
+      "nReturned": 50,
+      "executionTimeMillis": 30,
+      "totalKeysExamined": 0,
+      "totalDocsExamined": 50000,
+      "executionStages": {
+        "isCached": false,
+        "stage": "PROJECTION_SIMPLE",
+        "nReturned": 50,
+        "executionTimeMillisEstimate": 20,
+        "works": 50052,
+        "advanced": 50,
+        "needTime": 50001,
+        "needYield": 0,
+        "saveState": 1,
+        "restoreState": 1,
+        "isEOF": 1,
+        "transformBy": {
+          "items": 0
+        },
+        "inputStage": {
+          "stage": "SORT",
+          "nReturned": 50,
+          "executionTimeMillisEstimate": 20,
+          "works": 50052,
+          "advanced": 50,
+          "needTime": 50001,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 1,
+          "isEOF": 1,
+          "sortPattern": {
+            "totalMinor": -1,
+            "_id": -1
+          },
+          "memLimit": 104857600,
+          "limitAmount": 50,
+          "type": "simple",
+          "totalDataSizeSorted": 32724,
+          "usedDisk": false,
+          "spills": 0,
+          "spilledDataStorageSize": 0,
+          "inputStage": {
+            "stage": "COLLSCAN",
+            "filter": {
+              "$and": [
+                {
+                  "$or": [
+                    {
+                      "customerEmail": {
+                        "$regex": "ar",
+                        "$options": "i"
+                      }
+                    },
+                    {
+                      "customerName": {
+                        "$regex": "ar",
+                        "$options": "i"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "deletedAt": {
+                    "$eq": null
+                  }
+                },
+                {
+                  "status": {
+                    "$eq": "completed"
+                  }
+                }
+              ]
+            },
+            "nReturned": 7103,
+            "executionTimeMillisEstimate": 20,
+            "works": 50001,
+            "advanced": 7103,
+            "needTime": 42897,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "direction": "forward",
+            "docsExamined": 50000
+          }
+        }
+      }
+    },
+    "queryShapeHash": "F8F9F64E2317652AFE2B1A217D2CAA14028C79F8A8D3A20C0361FE8CCF84739E",
+    "command": {
+      "find": "orders",
+      "filter": {
+        "deletedAt": null,
+        "status": "completed",
+        "$or": [
+          {
+            "customerName": {
+              "$regex": "ar",
+              "$options": "i"
+            }
+          },
+          {
+            "customerEmail": {
+              "$regex": "ar",
+              "$options": "i"
+            }
+          }
+        ]
+      },
+      "sort": {
+        "totalMinor": -1,
+        "_id": -1
+      },
+      "projection": {
+        "items": 0
+      },
+      "skip": 0,
+      "limit": 50,
+      "$db": "sarh_search_benchmark"
+    },
+    "serverInfo": {
+      "host": "2f119b942309",
+      "port": 27017,
+      "version": "8.0.34",
+      "gitVersion": "51db4515a6597aedcf6188ee4e48a27e65b065ae"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+      "internalQueryFrameworkControl": "trySbeRestricted",
+      "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+    },
+    "ok": 1
+  },
+  "count": {
+    "explainVersion": "2",
+    "stages": [
+      {
+        "$cursor": {
+          "queryPlanner": {
+            "namespace": "sarh_search_benchmark.orders",
+            "parsedQuery": {
+              "$and": [
+                {
+                  "$or": [
+                    {
+                      "customerEmail": {
+                        "$regex": "ar",
+                        "$options": "i"
+                      }
+                    },
+                    {
+                      "customerName": {
+                        "$regex": "ar",
+                        "$options": "i"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "deletedAt": {
+                    "$eq": null
+                  }
+                },
+                {
+                  "status": {
+                    "$eq": "completed"
+                  }
+                }
+              ]
+            },
+            "indexFilterSet": false,
+            "queryHash": "2AC07D42",
+            "planCacheShapeHash": "2AC07D42",
+            "planCacheKey": "9283BCCA",
+            "optimizationTimeMillis": 0,
+            "maxIndexedOrSolutionsReached": false,
+            "maxIndexedAndSolutionsReached": false,
+            "maxScansToExplodeReached": false,
+            "prunedSimilarIndexes": false,
+            "winningPlan": {
+              "isCached": false,
+              "queryPlan": {
+                "stage": "GROUP",
+                "planNodeId": 2,
+                "inputStage": {
+                  "stage": "COLLSCAN",
+                  "planNodeId": 1,
+                  "filter": {
+                    "$and": [
+                      {
+                        "$or": [
+                          {
+                            "customerEmail": {
+                              "$regex": "ar",
+                              "$options": "i"
+                            }
+                          },
+                          {
+                            "customerName": {
+                              "$regex": "ar",
+                              "$options": "i"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "deletedAt": {
+                          "$eq": null
+                        }
+                      },
+                      {
+                        "status": {
+                          "$eq": "completed"
+                        }
+                      }
+                    ]
+                  },
+                  "direction": "forward"
+                }
+              },
+              "slotBasedPlan": {
+                "slots": "$$RESULT=s11 env: {  }",
+                "stages": "[2] project [s11 = newObj(\"_id\", s9, \"total\", s10)] \n[2] project [s9 = null, s10 = (convert ( s8, int32) ?: s8)] \n[2] group [] [s8 = count()] spillSlots[s7] mergingExprs[sum(s7)] \n[1] filter {((traverseF(s1, lambda(l5.0) { (((l5.0 == /ar/i) ?: false) || (regexMatch(PcreRegex(/ar/i), l5.0) ?: false)) }, false) || traverseF(s2, lambda(l6.0) { (((l6.0 == /ar/i) ?: false) || (regexMatch(PcreRegex(/ar/i), l6.0) ?: false)) }, false)) && (traverseF(s3, lambda(l7.0) { ((\n    if (typeMatch(l7.0, 1024) ?: true) \n    then null \n    else move(l7.0) \n== null) ?: false) }, false) && traverseF(s4, lambda(l8.0) { ((move(l8.0) == \"completed\") ?: false) }, false)))} \n[1] scan s5 s6 none none none none none none lowPriority [s1 = customerEmail, s2 = customerName, s3 = deletedAt, s4 = status] @\"1ccfa2da-2c5d-456e-9db8-d269f01cd80c\" true false "
+              }
+            },
+            "rejectedPlans": []
+          },
+          "executionStats": {
+            "executionSuccess": true,
+            "nReturned": 1,
+            "executionTimeMillis": 24,
+            "totalKeysExamined": 0,
+            "totalDocsExamined": 50000,
+            "executionStages": {
+              "stage": "project",
+              "planNodeId": 2,
+              "nReturned": 1,
+              "executionTimeMillisEstimate": 22,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 2,
+              "restoreState": 2,
+              "isEOF": 1,
+              "projections": {
+                "11": "newObj(\"_id\", s9, \"total\", s10) "
+              },
+              "inputStage": {
+                "stage": "project",
+                "planNodeId": 2,
+                "nReturned": 1,
+                "executionTimeMillisEstimate": 22,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 2,
+                "restoreState": 2,
+                "isEOF": 1,
+                "projections": {
+                  "9": "null ",
+                  "10": "(convert ( s8, int32) ?: s8) "
+                },
+                "inputStage": {
+                  "stage": "group",
+                  "planNodeId": 2,
+                  "nReturned": 1,
+                  "executionTimeMillisEstimate": 22,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 2,
+                  "restoreState": 2,
+                  "isEOF": 1,
+                  "groupBySlots": [],
+                  "expressions": {
+                    "8": "count() ",
+                    "initExprs": {
+                      "8": null
+                    }
+                  },
+                  "mergingExprs": {
+                    "7": "sum(s7) "
+                  },
+                  "usedDisk": false,
+                  "spills": 0,
+                  "spilledBytes": 0,
+                  "spilledRecords": 0,
+                  "spilledDataStorageSize": 0,
+                  "inputStage": {
+                    "stage": "filter",
+                    "planNodeId": 1,
+                    "nReturned": 7103,
+                    "executionTimeMillisEstimate": 22,
+                    "opens": 1,
+                    "closes": 1,
+                    "saveState": 2,
+                    "restoreState": 2,
+                    "isEOF": 1,
+                    "numTested": 50000,
+                    "filter": "((traverseF(s1, lambda(l5.0) { (((l5.0 == /ar/i) ?: false) || (regexMatch(PcreRegex(/ar/i), l5.0) ?: false)) }, false) || traverseF(s2, lambda(l6.0) { (((l6.0 == /ar/i) ?: false) || (regexMatch(PcreRegex(/ar/i), l6.0) ?: false)) }, false)) && (traverseF(s3, lambda(l7.0) { ((\n    if (typeMatch(l7.0, 1024) ?: true) \n    then null \n    else move(l7.0) \n== null) ?: false) }, false) && traverseF(s4, lambda(l8.0) { ((move(l8.0) == \"completed\") ?: false) }, false))) ",
+                    "inputStage": {
+                      "stage": "scan",
+                      "planNodeId": 1,
+                      "nReturned": 50000,
+                      "executionTimeMillisEstimate": 8,
+                      "opens": 1,
+                      "closes": 1,
+                      "saveState": 2,
+                      "restoreState": 2,
+                      "isEOF": 1,
+                      "numReads": 50000,
+                      "recordSlot": 5,
+                      "recordIdSlot": 6,
+                      "scanFieldNames": [
+                        "customerEmail",
+                        "customerName",
+                        "deletedAt",
+                        "status"
+                      ],
+                      "scanFieldSlots": [
+                        1,
+                        2,
+                        3,
+                        4
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 23
+      },
+      {
+        "$project": {
+          "total": true,
+          "_id": false
+        },
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 23
+      }
+    ],
+    "queryShapeHash": "F09D7D61E2302A7E8BE5CCED3EC92F8BFCD58625412808F82B4ED345C2F95F86",
+    "serverInfo": {
+      "host": "2f119b942309",
+      "port": 27017,
+      "version": "8.0.34",
+      "gitVersion": "51db4515a6597aedcf6188ee4e48a27e65b065ae"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+      "internalQueryFrameworkControl": "trySbeRestricted",
+      "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+    },
+    "command": {
+      "aggregate": "orders",
+      "pipeline": [
+        {
+          "$match": {
+            "deletedAt": null,
+            "status": "completed",
+            "$or": [
+              {
+                "customerName": {
+                  "$regex": "ar",
+                  "$options": "i"
+                }
+              },
+              {
+                "customerEmail": {
+                  "$regex": "ar",
+                  "$options": "i"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "$count": "total"
+        }
+      ],
+      "cursor": {},
+      "$db": "sarh_search_benchmark"
+    },
+    "ok": 1
+  }
+}

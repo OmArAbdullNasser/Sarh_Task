@@ -1,0 +1,35 @@
+{
+  "name": "sarh-orders-console",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "backend:dev": "npm --prefix backend run dev",
+    "backend:build": "npm --prefix backend run build",
+    "backend:test": "npm --prefix backend test",
+    "backend:seed": "npm --prefix backend run seed",
+    "db:up": "docker compose up -d --wait",
+    "db:stop": "docker compose stop",
+    "bench:seed": "tsx scripts/seed-benchmark.ts",
+    "bench:run": "tsx scripts/benchmark-search.ts",
+    "bench:prefix": "tsx scripts/benchmark-prefix.ts",
+    "typecheck": "tsc --noEmit && npm --prefix backend run typecheck && npm --prefix frontend run typecheck",
+    "setup": "npm --prefix backend ci && npm --prefix frontend ci && npm --prefix backend run setup",
+    "frontend:dev": "npm --prefix frontend run dev",
+    "dev": "concurrently -k -n API,WEB -c green,blue \"npm:backend:dev\" \"npm:frontend:dev\"",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "test": "npm --prefix backend test && npm --prefix frontend test"
+  },
+  "dependencies": {
+    "mongodb": "7.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "concurrently": "10.0.6",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}
